@@ -1,18 +1,38 @@
 <template>
-  <div class="home">
-    <img src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <video id="video" width="640" height="480" autoplay></video>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+let video;
 
 export default {
   name: 'home',
-  components: {
-    HelloWorld
+  mounted() {
+    loadCamera();
+  },
+  methods: {}
+}
+
+//////
+
+// Get access to the camera!
+function loadCamera() {
+  video = document.getElementById('video');
+  console.log(video);
+
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Not adding `{ audio: true }` since we only want video now
+
+      navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+          video.src = window.URL.createObjectURL(stream);
+          video.play();
+      });
   }
 }
 </script>
+
+<style>
+  canvas {
+    border: 1px tomato solid;
+  }
+</style>
