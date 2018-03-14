@@ -1,159 +1,59 @@
 <template>
   <div>
-    <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera and a <span title="Android Chrome or Apple Safari :(">specific</span> device in order to experience this.</p>
-    
-    <p v-if="checkedCamera && !noCamera && mediaDevices.length > 1" class="centered">
-      <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
-    </p>
-    <video id="video" autoplay playsinline></video>
-
-    <pre>{{tempDeviceId}}</pre>
+    <video id="video" playsinline autoplay></video>
   </div>
 </template>
 
 <script>
-'use strict';
+var captstream;
+var option = [];
+var videoElement;
 
-let video, size, stream;
+function gotDevices(deviceInfos) {
+  option.length = 0;
+  for (var i = 0; i !== deviceInfos.length; ++i) {
+    var deviceInfo = deviceInfos[i];
+    
+    option.push(deviceInfo.deviceId);
+  }
+}
+
+function gotStream(stream) {
+  captstream = stream; // make stream available to console
+  videoElement.srcObject = stream;
+
+  // Refresh button list in case labels have become available
+  // from start > getUserMedia
+  return navigator.mediaDevices.enumerateDevices();
+}
+
+function start() {
+  if (captstream) {
+    captstream.getTracks().forEach(function(track) {
+      track.stop();
+    });
+  }
+
+  var videoSource = option[0];
+  var constraints = {
+    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+  };
+
+  navigator.mediaDevices.getUserMedia(constraints).
+      then(gotStream).then(gotDevices).catch(handleError);
+}
+
+function handleError(error) {
+  console.log('navigator.getUserMedia error: ', error);
+}
 
 export default {
   name: 'home',
-  data: function() {
-    return {
-      noCamera: false,
-      checkedCamera: false,
-      mediaDevices: [],
-      mediaDeviceIndex: 0,
-      tempDeviceId: 'not yet...'
-    };
-  },
-  methods: {
-    toggleCamera: toggleCamera
-  },
   mounted() {
-    if (detectGetUserMedia()) {
-      init();
-
-      loadCamera.call(this);
-    } else {
-      noCamera.call(this);
-    }
-
-    this.checkedCamera = true;
+    navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
+    start();
+    videoElement = document.querySelector('video');
   }
-}
-
-//////
-
-function caughtCameraStream(devicestream) {
-  stream = devicestream;
-  video.srcObject = stream;
-}
-
-function createConstraints() {
-  return {
-    video: {
-      width: {max: size.width},
-      height: {max: size.height},
-    }
-  };
-}
-
-// detect whether or not we have access to a camera
-function detectGetUserMedia() {
-  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.enumerateDevices);
-}
-
-function determineWindowSize() {
-  const offset = 50;
-  
-  // return { 
-  //   width: window.innerWidth - offset,
-  //   height: window.innerHeight - offset
-  // };
-
-  const square = window.innerWidth - offset;
-  return {
-    width: square,
-    height: square
-  }
-}
-
-function handleErrorInCamera(error) {
-  console.log(error);
-}
-
-function init() {
-  video = document.getElementById('video');
-  size = determineWindowSize();
-
-  video.width = size.width;
-  video.height = size.height;
-}
-
-// Get access to the camera!
-function loadCamera() {
-  let constraints = createConstraints();
-
-  navigator.mediaDevices.enumerateDevices().then((deviceInfo) => {
-    let videoDevices = deviceInfo.filter(dev => dev.kind === 'videoinput');
-    let deviceId;
-
-    this.mediaDevices = videoDevices;
-
-    if (videoDevices.length) {
-      // deviceId = { exact: videoDevices[0].deviceId };
-      deviceId = videoDevices[0].deviceId;
-    } else {
-      deviceId = undefined;
-    }
-
-    constraints.video.deviceId = deviceId;
-    TEMPsetLabel.call(this, constraints);
-    lookForStream(constraints);
-  });
-}
-
-// get the stream data for the defined device
-function lookForStream(deviceConstraints) {
-  navigator.mediaDevices.getUserMedia(deviceConstraints)
-    .then(caughtCameraStream)
-    .catch(handleErrorInCamera);
-}
-
-// update our data to reflect the lack of camera
-function noCamera() {
-  this.noCamera = true;
-}
-
-// move through the mediaDevices, updating the source of the video stream
-function toggleCamera() {
-  let constraints = createConstraints();
-  let deviceId;
-
-  this.mediaDeviceIndex++;
-
-  if (this.mediaDeviceIndex === this.mediaDevices.length) {
-    this.mediaDeviceIndex = 0;
-  }
-
-  deviceId = this.mediaDevices[this.mediaDeviceIndex].deviceId;
-  // constraints.video.deviceId = { exact: deviceId };
-  constraints.video.deviceId = deviceId;
-  TEMPsetLabel.call(this, constraints);
-
-  stopStream();
-  lookForStream(constraints);
-}
-
-function TEMPsetLabel(constraints) {
-  this.tempDeviceId = constraints;
-}
-
-function stopStream() {
-  stream.getTracks().forEach(track => {
-    track.stop();
-  });
 }
 </script>
 
