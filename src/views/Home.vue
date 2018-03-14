@@ -8,8 +8,6 @@
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
     <video id="video" autoplay playsInline></video>
-
-    <pre>{{this.mediaDevices}}</pre>
   </div>
 </template>
 
@@ -47,7 +45,6 @@ export default {
 
 function caughtCameraStream(devicestream) {
   stream = devicestream;
-  // video.src = window.URL.createObjectURL(stream);
   video.srcObject = stream;
 }
 
@@ -105,17 +102,21 @@ function loadCamera() {
 
     if (videoDevices.length) {
       deviceId = { exact: videoDevices[0].deviceId };
-      this.tempDeviceId = this.mediaDevices[this.mediaDeviceIndex].label;
+      TEMPsetLabel.call(this);
     } else {
       deviceId = undefined;
     }
 
     constraints.video.deviceId = deviceId;
-  
-    navigator.mediaDevices.getUserMedia(constraints)
+    lookForStream(constraints);
+  });
+}
+
+// get the stream data for the defined device
+function lookForStream(deviceConstraints) {
+  navigator.mediaDevices.getUserMedia(deviceConstraints)
       .then(caughtCameraStream)
       .catch(handleErrorInCamera);
-  });
 }
 
 // update our data to reflect the lack of camera
@@ -135,13 +136,15 @@ function toggleCamera() {
   }
 
   deviceId = this.mediaDevices[this.mediaDeviceIndex].deviceId;
-  this.tempDeviceId = this.mediaDevices[this.mediaDeviceIndex].label;
+  TEMPsetLabel.call(this);
   constraints.video.deviceId = { exact: deviceId};
 
   stopStream();
-  navigator.mediaDevices.getUserMedia(constraints)
-      .then(caughtCameraStream)
-      .catch(handleErrorInCamera);
+  lookForStream(constraints);
+}
+
+function TEMPsetLabel() {
+  this.tempDeviceId = `${this.mediaDevices[this.mediaDeviceIndex].label} - ${this.mediaDeviceIndex}`;
 }
 
 function stopStream() {
@@ -154,5 +157,11 @@ function stopStream() {
 <style>
   .centered {
     text-align: center;
+  }
+
+  video {
+    border: 1px tomato solid;
+    margin: 0 auto;
+    display: block;
   }
 </style>
