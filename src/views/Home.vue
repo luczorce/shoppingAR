@@ -7,7 +7,7 @@
     <p v-if="checkedCamera && !noCamera && mediaDevices.length > 1" class="centered">
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
-    <video id="video" autoplay></video>
+    <video id="video" autoplay playsInline></video>
 
     <pre>{{this.mediaDevices}}</pre>
   </div>
