@@ -30,8 +30,10 @@ export default {
       init();
 
       getVideoDevices()
-        .then(storeVideoDevices.bind(this))
-        .then(lookForStream.bind(this));
+        .then(devices => {
+          storeVideoDevices.call(this, devices);
+          lookForStream.call(this);
+        });
 
       // TODO this is also in the other example, it's like they call two things and hope one works before the other, or dont care that it does
       // window.setTimeout(lookForStream.bind(this), 200);
@@ -97,8 +99,6 @@ function getVideoDevices() {
 function storeVideoDevices(devices) {
   let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
   this.mediaDevices = videoDevices;
-
-  return true;
 }
 
 // get the stream data for the defined device
