@@ -46,7 +46,6 @@ export default {
 //////
 
 function caughtCameraStream(devicestream) {
-alert('got a device stream');
   stream = devicestream;
   video.srcObject = stream;
 
@@ -98,6 +97,8 @@ function getVideoDevices() {
 function storeVideoDevices(devices) {
   let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
   this.mediaDevices = videoDevices;
+
+  return true;
 }
 
 // get the stream data for the defined device
@@ -135,7 +136,7 @@ function stopStream() {
   }
 
   video {
-    border: 1px blue solid;
+    border: 1px red solid;
     margin: 0 auto;
     display: block;
   }
