@@ -1,5 +1,9 @@
 <template>
-  <video id="video" width="640" height="480" autoplay></video>
+  <div>
+    <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera in order to experience this.</p>
+
+    <video id="video" autoplay></video>
+  </div>
 </template>
 
 <script>
@@ -7,32 +11,47 @@ let video;
 
 export default {
   name: 'home',
-  mounted() {
-    loadCamera();
+  data: function() {
+    return {
+      noCamera: false,
+      checkedCamera: false
+    };
   },
-  methods: {}
+  methods: {},
+  mounted() {
+    if (detectGetUserMedia()) {
+      loadCamera();
+    } else {
+      noCamera.call(this);
+    }
+
+    this.checkedCamera = true;
+  }
 }
 
 //////
 
+// detect whether or not we have access to a camera
+function detectGetUserMedia() {
+  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+}
+
 // Get access to the camera!
 function loadCamera() {
   video = document.getElementById('video');
-  console.log(video);
+  
+  // Not adding `{ audio: true }` since we only want video now
+  navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+    video.src = window.URL.createObjectURL(stream);
+    video.play();
+  });
+}
 
-  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      // Not adding `{ audio: true }` since we only want video now
-
-      navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-          video.src = window.URL.createObjectURL(stream);
-          video.play();
-      });
-  }
+// update our data to reflect the lack of camera
+function noCamera() {
+  this.noCamera = true;
 }
 </script>
 
 <style>
-  canvas {
-    border: 1px tomato solid;
-  }
 </style>
