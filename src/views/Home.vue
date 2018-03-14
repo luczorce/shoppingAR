@@ -34,7 +34,7 @@ export default {
         // .then(lookForStream.bind(this));
 
       // TODO this is also in the other example, it's like they call two things and hope one works before the other, or dont care that it does
-      lookForStream.call(this);
+      window.setTimeout(lookForStream.bind(this), 200);
     } else {
       this.noCamera = true;
     }
@@ -134,7 +134,7 @@ function stopStream() {
   }
 
   video {
-    border: 1px red solid;
+    border: 1px blue solid;
     margin: 0 auto;
     display: block;
   }
