@@ -2,7 +2,7 @@
   <div>
     <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera and a modern device in order to experience this.</p>
 
-    <p>{{tempDeviceId}}</p>
+    <p><strong>device label:</strong> {{tempDeviceId}} <strong>device count:</strong> {{mediaDevices.length}}</p>
     <p v-if="checkedCamera && !noCamera && mediaDevices.length > 1">
       <button type="button" v-on:click="toggleCamera()" class="centered">toggle camera feed</button>
     </p>
