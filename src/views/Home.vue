@@ -1,13 +1,13 @@
 <template>
   <div>
-    <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera and a modern device in order to experience this.</p>
-
-    <p><strong>device label:</strong> {{tempDeviceId}} <strong>device count:</strong> {{mediaDevices.length}}</p>
+    <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera and a <span title="Android Chrome or Apple Safari :(">specific</span> device in order to experience this.</p>
     
     <p v-if="checkedCamera && !noCamera && mediaDevices.length > 1" class="centered">
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
     <video id="video" autoplay playsinline></video>
+
+    <pre>{{tempDeviceId}}</pre>
   </div>
 </template>
 
@@ -98,16 +98,16 @@ function loadCamera() {
     let deviceId;
 
     this.mediaDevices = videoDevices;
-    console.log(videoDevices);
 
     if (videoDevices.length) {
-      deviceId = { exact: videoDevices[0].deviceId };
-      TEMPsetLabel.call(this);
+      // deviceId = { exact: videoDevices[0].deviceId };
+      deviceId = videoDevices[0].deviceId;
     } else {
       deviceId = undefined;
     }
 
     constraints.video.deviceId = deviceId;
+    TEMPsetLabel.call(this, constraints);
     lookForStream(constraints);
   });
 }
@@ -136,15 +136,16 @@ function toggleCamera() {
   }
 
   deviceId = this.mediaDevices[this.mediaDeviceIndex].deviceId;
-  TEMPsetLabel.call(this);
-  constraints.video.deviceId = { exact: deviceId};
+  // constraints.video.deviceId = { exact: deviceId };
+  constraints.video.deviceId = deviceId;
+  TEMPsetLabel.call(this, constraints);
 
   stopStream();
   lookForStream(constraints);
 }
 
-function TEMPsetLabel() {
-  this.tempDeviceId = `${this.mediaDevices[this.mediaDeviceIndex].label} - ${this.mediaDeviceIndex}`;
+function TEMPsetLabel(constraints) {
+  this.tempDeviceId = constraints;
 }
 
 function stopStream() {
