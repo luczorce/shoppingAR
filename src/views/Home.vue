@@ -12,6 +12,8 @@
 </template>
 
 <script>
+'use strict';
+
 let video, size, stream;
 
 export default {
@@ -115,8 +117,8 @@ function loadCamera() {
 // get the stream data for the defined device
 function lookForStream(deviceConstraints) {
   navigator.mediaDevices.getUserMedia(deviceConstraints)
-      .then(caughtCameraStream)
-      .catch(handleErrorInCamera);
+    .then(caughtCameraStream)
+    .catch(handleErrorInCamera);
 }
 
 // update our data to reflect the lack of camera
