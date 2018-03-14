@@ -46,6 +46,7 @@ export default {
 //////
 
 function caughtCameraStream(devicestream) {
+alert('got a device stream');
   stream = devicestream;
   video.srcObject = stream;
 
@@ -101,7 +102,6 @@ function storeVideoDevices(devices) {
 
 // get the stream data for the defined device
 function lookForStream() {
-  window.alert('yeahhh');
   let constraints = createConstraints.call(this);
 
   navigator.mediaDevices.getUserMedia(constraints)
