@@ -6,14 +6,10 @@
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
     <video id="video" autoplay playsinline></video>
-
-    <pre>{{tempDeviceId}}</pre>
   </div>
 </template>
 
 <script>
-'use strict';
-
 let video, size, stream;
 
 export default {
@@ -23,8 +19,7 @@ export default {
       noCamera: false,
       checkedCamera: false,
       mediaDevices: [],
-      mediaDeviceIndex: 0,
-      tempDeviceId: 'not yet...'
+      mediaDeviceIndex: 0
     };
   },
   methods: {
@@ -33,7 +28,6 @@ export default {
   mounted() {
     if (detectGetUserMedia()) {
       init();
-
       loadCamera.call(this);
     } else {
       noCamera.call(this);
@@ -55,12 +49,14 @@ function createConstraints() {
     video: {
       width: {max: size.width},
       height: {max: size.height},
+      deviceId: this.mediaDevices[this.mediaDeviceIndex].deviceId
     }
   };
 }
 
 // detect whether or not we have access to a camera
 function detectGetUserMedia() {
+
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.enumerateDevices);
 }
 
@@ -93,30 +89,18 @@ function init() {
 
 // Get access to the camera!
 function loadCamera() {
-  let constraints = createConstraints();
-
-  navigator.mediaDevices.enumerateDevices().then((deviceInfo) => {
-    let videoDevices = deviceInfo.filter(dev => dev.kind === 'videoinput');
-    let deviceId;
+  navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
+    let videoDevices = deviceInfos.filter(dev => dev.kind === 'videoinput');
 
     this.mediaDevices = videoDevices;
-
-    if (videoDevices.length) {
-      // deviceId = { exact: videoDevices[0].deviceId };
-      deviceId = videoDevices[0].deviceId;
-    } else {
-      deviceId = undefined;
-    }
-
-    constraints.video.deviceId = deviceId;
-    TEMPsetLabel.call(this, constraints);
-    lookForStream(constraints);
-  });
+  }).then(lookForStream.bind(this));
 }
 
 // get the stream data for the defined device
-function lookForStream(deviceConstraints) {
-  navigator.mediaDevices.getUserMedia(deviceConstraints)
+function lookForStream() {
+  let constraints = createConstraints.call(this);
+
+  navigator.mediaDevices.getUserMedia(constraints)
     .then(caughtCameraStream)
     .catch(handleErrorInCamera);
 }
@@ -128,26 +112,14 @@ function noCamera() {
 
 // move through the mediaDevices, updating the source of the video stream
 function toggleCamera() {
-  let constraints = createConstraints();
-  let deviceId;
-
   this.mediaDeviceIndex++;
 
   if (this.mediaDeviceIndex === this.mediaDevices.length) {
     this.mediaDeviceIndex = 0;
   }
 
-  deviceId = this.mediaDevices[this.mediaDeviceIndex].deviceId;
-  // constraints.video.deviceId = { exact: deviceId };
-  constraints.video.deviceId = deviceId;
-  TEMPsetLabel.call(this, constraints);
-
   stopStream();
-  lookForStream(constraints);
-}
-
-function TEMPsetLabel(constraints) {
-  this.tempDeviceId = constraints;
+  lookForStream.call(this);
 }
 
 function stopStream() {
