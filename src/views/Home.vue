@@ -28,9 +28,12 @@ export default {
   mounted() {
     if (detectGetUserMedia()) {
       init();
-      loadCamera.call(this);
+
+      getVideoDevices()
+        .then(storeVideoDevices.bind(this))
+        .then(lookForStream.bind(this));
     } else {
-      noCamera.call(this);
+      this.noCamera = true;
     }
 
     this.checkedCamera = true;
@@ -54,21 +57,14 @@ function createConstraints() {
   };
 }
 
-// detect whether or not we have access to a camera
 function detectGetUserMedia() {
-
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.enumerateDevices);
 }
 
 function determineWindowSize() {
   const offset = 50;
-  
-  // return { 
-  //   width: window.innerWidth - offset,
-  //   height: window.innerHeight - offset
-  // };
-
   const square = window.innerWidth - offset;
+  
   return {
     width: square,
     height: square
@@ -87,13 +83,13 @@ function init() {
   video.height = size.height;
 }
 
-// Get access to the camera!
-function loadCamera() {
-  navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
-    let videoDevices = deviceInfos.filter(dev => dev.kind === 'videoinput');
+function getVideoDevices() {
+  return navigator.mediaDevices.enumerateDevices();
+}
 
-    this.mediaDevices = videoDevices;
-  }).then(lookForStream.bind(this));
+function storeVideoDevices(devices) {
+  let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
+  this.mediaDevices = videoDevices;
 }
 
 // get the stream data for the defined device
@@ -103,11 +99,6 @@ function lookForStream() {
   navigator.mediaDevices.getUserMedia(constraints)
     .then(caughtCameraStream)
     .catch(handleErrorInCamera);
-}
-
-// update our data to reflect the lack of camera
-function noCamera() {
-  this.noCamera = true;
 }
 
 // move through the mediaDevices, updating the source of the video stream
@@ -135,7 +126,7 @@ function stopStream() {
   }
 
   video {
-    border: 1px tomato solid;
+    border: 1px lime solid;
     margin: 0 auto;
     display: block;
   }
