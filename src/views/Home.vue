@@ -2,6 +2,7 @@
   <div>
     <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera and a modern device in order to experience this.</p>
 
+    <p>{{tempDeviceId}}</p>
     <p v-if="checkedCamera && !noCamera && mediaDevices.length > 1">
       <button type="button" v-on:click="toggleCamera()" class="centered">toggle camera feed</button>
     </p>
@@ -19,7 +20,8 @@ export default {
       noCamera: false,
       checkedCamera: false,
       mediaDevices: [],
-      mediaDeviceIndex: 0
+      mediaDeviceIndex: 0,
+      tempDeviceId: 'not yet...'
     };
   },
   methods: {
@@ -96,9 +98,11 @@ function loadCamera() {
     let deviceId;
 
     this.mediaDevices = videoDevices;
+    console.log(videoDevices);
 
     if (videoDevices.length) {
       deviceId = { exact: videoDevices[0].deviceId };
+      this.tempDeviceId = this.mediaDevices[this.mediaDeviceIndex].label;
     } else {
       deviceId = undefined;
     }
@@ -127,8 +131,9 @@ function toggleCamera() {
     this.mediaDeviceIndex = 0;
   }
 
-  deviceId = { exact: this.mediaDevices[this.mediaDeviceIndex].deviceId };
-  constraints.video.deviceId = deviceId;
+  deviceId = this.mediaDevices[this.mediaDeviceIndex].deviceId;
+  this.tempDeviceId = this.mediaDevices[this.mediaDeviceIndex].label;
+  constraints.video.deviceId = { exact: deviceId};
 
   stopStream();
   navigator.mediaDevices.getUserMedia(constraints)
