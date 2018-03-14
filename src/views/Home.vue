@@ -2,7 +2,7 @@
   <div>
     <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera and a <span title="Android Chrome or Apple Safari :(">specific</span> device in order to experience this.</p>
     
-    <p v-if="checkedCamera && !noCamera && mediaDevices.length > 1" class="centered">
+    <p v-if="checkedCamera && !noCamera && mediaDevices.length" class="centered">
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
     <video id="video" autoplay playsinline></video>
@@ -30,8 +30,11 @@ export default {
       init();
 
       getVideoDevices()
-        .then(storeVideoDevices.bind(this))
-        .then(lookForStream.bind(this));
+        .then(storeVideoDevices.bind(this));
+        // .then(lookForStream.bind(this));
+
+      // TODO this is also in the other example, it's like they call two things and hope one works before the other, or dont care that it does
+      lookForStream.call(this);
     } else {
       this.noCamera = true;
     }
@@ -45,14 +48,18 @@ export default {
 function caughtCameraStream(devicestream) {
   stream = devicestream;
   video.srcObject = stream;
+
+  // TODO this is what happens in the other example, the only difference I can see
+  return getVideoDevices();
 }
 
 function createConstraints() {
+  const deviceId = (this.mediaDevices.length) ? this.mediaDevices[this.mediaDeviceIndex].deviceId : undefined;
   return {
     video: {
       width: {max: size.width},
       height: {max: size.height},
-      deviceId: this.mediaDevices[this.mediaDeviceIndex].deviceId
+      deviceId: deviceId
     }
   };
 }
@@ -71,7 +78,7 @@ function determineWindowSize() {
   }
 }
 
-function handleErrorInCamera(error) {
+function handleError(error) {
   console.log(error);
 }
 
@@ -98,7 +105,8 @@ function lookForStream() {
 
   navigator.mediaDevices.getUserMedia(constraints)
     .then(caughtCameraStream)
-    .catch(handleErrorInCamera);
+    .then(storeVideoDevices.bind(this))
+    .catch(handleError);
 }
 
 // move through the mediaDevices, updating the source of the video stream
@@ -126,7 +134,7 @@ function stopStream() {
   }
 
   video {
-    border: 1px lime solid;
+    border: 1px red solid;
     margin: 0 auto;
     display: block;
   }
