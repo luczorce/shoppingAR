@@ -6,6 +6,8 @@
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
     <video id="video" autoplay playsinline></video>
+
+    <pre>{{ mediaDevices }}</pre>
   </div>
 </template>
 
@@ -110,16 +112,6 @@ function storeVideoDevices(devices) {
   this.mediaDevices = videoDevices;
 }
 
-// get the stream data for the defined device
-function lookForStream() {
-  let constraints = createConstraints.call(this);
-
-  navigator.mediaDevices.getUserMedia(constraints)
-    .then(caughtCameraStream)
-    .then(storeVideoDevices.bind(this))
-    .catch(handleError);
-}
-
 function stopStream() {
   if (!stream) return;
 
@@ -136,8 +128,7 @@ function toggleCamera() {
     this.mediaDeviceIndex = 0;
   }
 
-  stopStream();
-  lookForStream.call(this);
+  connectToCamera.call(this);
 }
 
 </script>
