@@ -5,6 +5,7 @@
     <p v-if="checkedCamera && !noCamera" class="centered">
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
+    <canvas id="canvas"></canvas>
     <video id="video" autoplay playsinline></video>
   </div>
 </template>
@@ -15,7 +16,8 @@ import augment from '../../node_modules/js-aruco/index.js'
 const INTERVAL_TIME = 5000;
 
 let detector, markerInterval;
-let size, stream, video;
+let drawingInterval;
+let canvas, size, stream, video;
 let mediaDeviceIds = [];
 let mediaDeviceIndex = 0;
 
@@ -58,7 +60,8 @@ function caughtCameraStream(devicestream) {
   stream = devicestream;
   video.srcObject = stream;
 
-  markerInterval = window.setInterval(detectMarker, INTERVAL_TIME)
+  drawingInterval = requestAnimationFrame(drawVideoToCanvas);
+  // markerInterval = window.setInterval(detectMarker, INTERVAL_TIME)
 
   // NOTE in webRTC example, they search for the devices again
   return navigator.mediaDevices.enumerateDevices();
@@ -94,7 +97,11 @@ function detectGetUserMedia() {
 }
 
 function detectMarker() {
-  console.log('checking');
+  // TODO get imageData from stream/video?
+  const imageData = stream;
+
+  const markers = detector.detect(imageData);
+  console.log(markers);
 }
 
 function determineWindowSize() {
@@ -107,16 +114,27 @@ function determineWindowSize() {
   }
 }
 
+function determineCanvasSize() {
+  canvas.width = size.width;
+  canvas.height = (size.width / video.videoWidth) * video.videoHeight;
+}
+
+function drawVideoToCanvas() {
+  // TODO can we do this once?
+  determineCanvasSize();
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  window.requestAnimationFrame(drawVideoToCanvas);
+}
+
 function handleError(error) {
   console.log(error);
 }
 
 function init() {
   video = document.getElementById('video');
+  canvas = document.getElementById('canvas');
   size = determineWindowSize();
-
-  video.width = size.width;
-  // video.height = size.height;
 }
 
 function initAR() {
@@ -139,6 +157,7 @@ function stopStream() {
 // move through the mediaDevices, updating the source of the video stream
 function toggleCamera() {
   if (markerInterval) window.clearInterval(markerInterval);
+  if (drawingInterval) window.cancelAnimationFrame(drawingInterval);
 
   mediaDeviceIndex++;
 
@@ -157,8 +176,11 @@ function toggleCamera() {
   }
 
   video {
-    border: 1px blue solid;
-    margin: 0 auto;
+    display: none;
+  }
+
+  canvas {
     display: block;
+    margin: 0 auto;
   }
 </style>
