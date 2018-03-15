@@ -2,43 +2,41 @@
   <div>
     <p v-if="checkedCamera && noCamera">Sorry, you'll need a camera and a <span title="Android Chrome or Apple Safari :(">specific</span> device in order to experience this.</p>
     
-    <p v-if="checkedCamera && !noCamera && mediaDevices.length" class="centered">
+    <p v-if="checkedCamera && !noCamera" class="centered">
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
     <video id="video" autoplay playsinline></video>
-
-    <pre>{{ mediaDevices }}</pre>
   </div>
 </template>
 
 <script>
 let video, size, stream;
+let mediaDeviceIds = [];
+let mediaDeviceIndex = 0;
 
 export default {
   name: 'home',
   data: function() {
     return {
       noCamera: false,
-      checkedCamera: false,
-      mediaDevices: [],
-      mediaDeviceIndex: 0
+      checkedCamera: false
     };
   },
   methods: {
     toggleCamera: toggleCamera
   },
   mounted() {
-    if (detectGetUserMedia()) {
-      init();
+    init();
 
+    if (detectGetUserMedia()) {
       // NOTE in webRTC example, this is run first
       navigator.mediaDevices.enumerateDevices()
-        .then(storeVideoDevices.bind(this))
+        .then(storeVideoDevices)
         .catch(handleError);
 
       // NOTE in webRTC example this immediately follows enumerateDevices
       // there is no chaining, no waiting for the promise to resolve ???
-      connectToCamera.call(this);
+      connectToCamera();
     } else {
       this.noCamera = true;
     }
@@ -58,24 +56,25 @@ function caughtCameraStream(devicestream) {
 }
 
 function connectToCamera() {
-  let constraints = createConstraints.call(this);
+  let constraints = createConstraints();
   
   // stop any running stream
   stopStream();
 
   navigator.mediaDevices.getUserMedia(constraints)
     .then(caughtCameraStream)
-    .then(storeVideoDevices.bind(this))
+    .then(storeVideoDevices)
     .catch(handleError);
 }
 
 function createConstraints() {
-  const deviceId = (this.mediaDevices.length) ? this.mediaDevices[this.mediaDeviceIndex].deviceId : undefined;
+  const deviceId = (mediaDeviceIds.length) ? {exact: mediaDeviceIds[mediaDeviceIndex]} : undefined;
 
   return {
     video: {
-      width: {max: size.width},
-      height: {max: size.height},
+      // TODO bring this back when we get safari working
+      // width: {max: size.width},
+      // height: {max: size.height},
       deviceId: deviceId
     }
   };
@@ -104,12 +103,12 @@ function init() {
   size = determineWindowSize();
 
   video.width = size.width;
-  video.height = size.height;
+  // video.height = size.height;
 }
 
 function storeVideoDevices(devices) {
   let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
-  this.mediaDevices = videoDevices;
+  mediaDeviceIds = videoDevices.map(dev => dev.deviceId);
 }
 
 function stopStream() {
@@ -122,13 +121,13 @@ function stopStream() {
 
 // move through the mediaDevices, updating the source of the video stream
 function toggleCamera() {
-  this.mediaDeviceIndex++;
+  mediaDeviceIndex++;
 
-  if (this.mediaDeviceIndex === this.mediaDevices.length) {
-    this.mediaDeviceIndex = 0;
+  if (mediaDeviceIndex === mediaDeviceIds.length) {
+    mediaDeviceIndex = 0;
   }
 
-  connectToCamera.call(this);
+  connectToCamera();
 }
 
 </script>
@@ -139,7 +138,7 @@ function toggleCamera() {
   }
 
   video {
-    border: 1px red solid;
+    border: 1px blue solid;
     margin: 0 auto;
     display: block;
   }
