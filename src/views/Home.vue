@@ -13,8 +13,6 @@
 <script>
 import augment from '../../node_modules/js-aruco/index.js'
 
-const INTERVAL_TIME = 5000;
-
 let detector, markerInterval;
 let drawingInterval;
 let canvas, size, stream, video;
@@ -61,7 +59,7 @@ function caughtCameraStream(devicestream) {
   video.srcObject = stream;
 
   drawingInterval = requestAnimationFrame(drawVideoToCanvas);
-  markerInterval = window.setInterval(detectMarker, INTERVAL_TIME);
+  markerInterval = requestAnimationFrame(detectMarker);
 
   // NOTE in webRTC example, they search for the devices again
   return navigator.mediaDevices.enumerateDevices();
@@ -97,9 +95,29 @@ function detectGetUserMedia() {
 }
 
 function detectMarker() {
-  const imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-  const markers = detector.detect(imageData);
-  console.log(markers);
+  const context = canvas.getContext('2d');
+  // TODO why this wouldn't work in init, is beyond me right now
+  context.strokeStyle = 'red';
+  context.lineWidth = 5;
+
+  if (canvas.height) {
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    const markers = detector.detect(imageData);
+
+    markers.forEach((marker) => {
+      let corners = marker.corners;
+
+      context.beginPath();
+      context.moveTo(corners[0].x, corners[0].y);
+      context.lineTo(corners[1].x, corners[1].y);
+      context.lineTo(corners[2].x, corners[2].y);
+      context.lineTo(corners[3].x, corners[3].y);
+      context.lineTo(corners[0].x, corners[0].y);
+      context.stroke();
+    });
+  }
+
+  window.requestAnimationFrame(detectMarker);
 }
 
 function determineWindowSize() {
@@ -118,7 +136,7 @@ function determineCanvasSize() {
 }
 
 function drawVideoToCanvas() {
-  // TODO can we do this once?
+  // TODO why cant we do this once?
   determineCanvasSize();
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
@@ -154,7 +172,7 @@ function stopStream() {
 
 // move through the mediaDevices, updating the source of the video stream
 function toggleCamera() {
-  if (markerInterval) window.clearInterval(markerInterval);
+  if (markerInterval) window.cancelAnimationFrame(markerInterval);
   if (drawingInterval) window.cancelAnimationFrame(drawingInterval);
 
   mediaDeviceIndex++;
