@@ -61,7 +61,7 @@ function caughtCameraStream(devicestream) {
   video.srcObject = stream;
 
   drawingInterval = requestAnimationFrame(drawVideoToCanvas);
-  // markerInterval = window.setInterval(detectMarker, INTERVAL_TIME)
+  markerInterval = window.setInterval(detectMarker, INTERVAL_TIME);
 
   // NOTE in webRTC example, they search for the devices again
   return navigator.mediaDevices.enumerateDevices();
@@ -97,9 +97,7 @@ function detectGetUserMedia() {
 }
 
 function detectMarker() {
-  // TODO get imageData from stream/video?
-  const imageData = stream;
-
+  const imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
   const markers = detector.detect(imageData);
   console.log(markers);
 }
