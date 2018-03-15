@@ -10,7 +10,12 @@
 </template>
 
 <script>
-let video, size, stream;
+import augment from '../../node_modules/js-aruco/index.js'
+
+const INTERVAL_TIME = 5000;
+
+let detector, markerInterval;
+let size, stream, video;
 let mediaDeviceIds = [];
 let mediaDeviceIndex = 0;
 
@@ -29,6 +34,8 @@ export default {
     init();
 
     if (detectGetUserMedia()) {
+      initAR();
+
       // NOTE in webRTC example, this is run first
       navigator.mediaDevices.enumerateDevices()
         .then(storeVideoDevices)
@@ -50,6 +57,8 @@ export default {
 function caughtCameraStream(devicestream) {
   stream = devicestream;
   video.srcObject = stream;
+
+  markerInterval = window.setInterval(detectMarker, INTERVAL_TIME)
 
   // NOTE in webRTC example, they search for the devices again
   return navigator.mediaDevices.enumerateDevices();
@@ -84,6 +93,10 @@ function detectGetUserMedia() {
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.enumerateDevices);
 }
 
+function detectMarker() {
+  console.log('checking');
+}
+
 function determineWindowSize() {
   const offset = 50;
   const square = window.innerWidth - offset;
@@ -106,6 +119,10 @@ function init() {
   // video.height = size.height;
 }
 
+function initAR() {
+  detector = new augment.AR.Detector();
+}
+
 function storeVideoDevices(devices) {
   let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
   mediaDeviceIds = videoDevices.map(dev => dev.deviceId);
@@ -121,6 +138,8 @@ function stopStream() {
 
 // move through the mediaDevices, updating the source of the video stream
 function toggleCamera() {
+  if (markerInterval) window.clearInterval(markerInterval);
+
   mediaDeviceIndex++;
 
   if (mediaDeviceIndex === mediaDeviceIds.length) {
