@@ -29,14 +29,14 @@ export default {
     if (detectGetUserMedia()) {
       init();
 
-      getVideoDevices()
-        .then(devices => {
-          storeVideoDevices.call(this, devices);
-          lookForStream.call(this);
-        });
+      // NOTE in webRTC example, this is run first
+      navigator.mediaDevices.enumerateDevices()
+        .then(storeVideoDevices.bind(this))
+        .catch(handleError);
 
-      // TODO this is also in the other example, it's like they call two things and hope one works before the other, or dont care that it does
-      // window.setTimeout(lookForStream.bind(this), 200);
+      // NOTE in webRTC example this immediately follows enumerateDevices
+      // there is no chaining, no waiting for the promise to resolve ???
+      connectToCamera.call(this);
     } else {
       this.noCamera = true;
     }
@@ -51,12 +51,25 @@ function caughtCameraStream(devicestream) {
   stream = devicestream;
   video.srcObject = stream;
 
-  // TODO this is what happens in the other example, the only difference I can see
-  return getVideoDevices();
+  // NOTE in webRTC example, they search for the devices again
+  return navigator.mediaDevices.enumerateDevices();
+}
+
+function connectToCamera() {
+  let constraints = createConstraints.call(this);
+  
+  // stop any running stream
+  stopStream();
+
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then(caughtCameraStream)
+    .then(storeVideoDevices.bind(this))
+    .catch(handleError);
 }
 
 function createConstraints() {
   const deviceId = (this.mediaDevices.length) ? this.mediaDevices[this.mediaDeviceIndex].deviceId : undefined;
+
   return {
     video: {
       width: {max: size.width},
@@ -92,10 +105,6 @@ function init() {
   video.height = size.height;
 }
 
-function getVideoDevices() {
-  return navigator.mediaDevices.enumerateDevices();
-}
-
 function storeVideoDevices(devices) {
   let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
   this.mediaDevices = videoDevices;
@@ -111,6 +120,14 @@ function lookForStream() {
     .catch(handleError);
 }
 
+function stopStream() {
+  if (!stream) return;
+
+  stream.getTracks().forEach(track => {
+    track.stop();
+  });
+}
+
 // move through the mediaDevices, updating the source of the video stream
 function toggleCamera() {
   this.mediaDeviceIndex++;
@@ -123,11 +140,6 @@ function toggleCamera() {
   lookForStream.call(this);
 }
 
-function stopStream() {
-  stream.getTracks().forEach(track => {
-    track.stop();
-  });
-}
 </script>
 
 <style>
