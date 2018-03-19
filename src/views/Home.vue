@@ -96,28 +96,17 @@ function detectGetUserMedia() {
 
 function detectMarker() {
   const context = canvas.getContext('2d');
-  // TODO why this wouldn't work in init, is beyond me right now
-  context.strokeStyle = 'red';
-  context.lineWidth = 5;
-
-  if (canvas.height) {
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const markers = detector.detect(imageData);
-
-    markers.forEach((marker) => {
-      let corners = marker.corners;
-
-      context.beginPath();
-      context.moveTo(corners[0].x, corners[0].y);
-      context.lineTo(corners[1].x, corners[1].y);
-      context.lineTo(corners[2].x, corners[2].y);
-      context.lineTo(corners[3].x, corners[3].y);
-      context.lineTo(corners[0].x, corners[0].y);
-      context.stroke();
-    });
-  }
-
+  
   window.requestAnimationFrame(detectMarker);
+  if (!canvas.height) return;
+
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  const markers = detector.detect(imageData);
+
+  markers.forEach(function(marker) {
+    drawLocationData(marker, context);
+  });
+
 }
 
 function determineWindowSize() {
@@ -141,6 +130,21 @@ function drawVideoToCanvas() {
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
   window.requestAnimationFrame(drawVideoToCanvas);
+}
+
+function drawLocationData(marker, context) {
+  let corners = marker.corners;
+  
+  context.strokeStyle = 'red';
+  context.lineWidth = 5;
+
+  context.beginPath();
+  context.moveTo(corners[0].x, corners[0].y);
+  context.lineTo(corners[1].x, corners[1].y);
+  context.lineTo(corners[2].x, corners[2].y);
+  context.lineTo(corners[3].x, corners[3].y);
+  context.lineTo(corners[0].x, corners[0].y);
+  context.stroke();
 }
 
 function handleError(error) {
