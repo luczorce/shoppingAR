@@ -5,8 +5,13 @@
     <p v-if="checkedCamera && !noCamera" class="centered">
       <button type="button" v-on:click="toggleCamera()">toggle camera feed</button>
     </p>
-    <canvas id="canvas"></canvas>
-    <video id="video" autoplay playsinline></video>
+
+    <div class="visual-container">
+      <canvas id="canvas"></canvas>
+      <video id="video" autoplay playsinline></video>
+
+      <div class="location-data" id="locations"></div>
+    </div>
   </div>
 </template>
 
@@ -16,6 +21,7 @@
   let detector, markerInterval;
   let drawingInterval;
   let canvas, size, stream, video;
+  let locationContainer;
   let mediaDeviceIds = [];
   let mediaDeviceIndex = 0;
 
@@ -103,10 +109,7 @@
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const markers = detector.detect(imageData);
 
-    // markers.forEach(function(marker) {
-    //   drawLocationData(marker, context);
-    // });
-
+    locationContainer.innerHTML = '';
     markers.forEach(marker => drawLocationData(marker, context));
   }
 
@@ -134,18 +137,31 @@
   }
 
   function drawLocationData(marker, context) {
+    let locanvas = document.createElement('canvas');
+    let locontext = locanvas.getContext('2d');
     let corners = marker.corners;
     
-    context.strokeStyle = 'red';
-    context.lineWidth = 5;
+    locontext.fillStyle = 'white';
+    locontext.fillRect(0, 0, 300, 150);
+    locontext.strokeStyle = 'lime';
+    locontext.strokeRect(2, 2, 296, 146);
+    
+    locontext.fillStyle = 'lime';
+    locontext.font = '2em monospace';
+    locontext.fillText(`Location: ${marker.id}`, 10, 25);
 
-    context.beginPath();
-    context.moveTo(corners[0].x, corners[0].y);
-    context.lineTo(corners[1].x, corners[1].y);
-    context.lineTo(corners[2].x, corners[2].y);
-    context.lineTo(corners[3].x, corners[3].y);
-    context.lineTo(corners[0].x, corners[0].y);
-    context.stroke();
+    locationContainer.appendChild(locanvas);
+    
+    // context.strokeStyle = 'red';
+    // context.lineWidth = 5;
+
+    // context.beginPath();
+    // context.moveTo(corners[0].x, corners[0].y);
+    // context.lineTo(corners[1].x, corners[1].y);
+    // context.lineTo(corners[2].x, corners[2].y);
+    // context.lineTo(corners[3].x, corners[3].y);
+    // context.lineTo(corners[0].x, corners[0].y);
+    // context.stroke();
   }
 
   function handleError(error) {
@@ -155,6 +171,7 @@
   function init() {
     video = document.getElementById('video');
     canvas = document.getElementById('canvas');
+    locationContainer = document.getElementById('locations');
     size = determineWindowSize();
   }
 
@@ -204,4 +221,12 @@
     display: block;
     margin: 0 auto;
   }
+
+  /*.location-data {
+    background: tomato;
+  }
+
+  .location-data canvas {
+    border: 2px black solid;
+  }*/
 </style>
