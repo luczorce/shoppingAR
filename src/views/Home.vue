@@ -224,12 +224,13 @@
   }
 
   video {
-    display: none;
+    /*display: none;*/
   }
 
   canvas {
-    display: block;
-    margin: 0 auto;
+    display: none;
+    /*display: block;
+    margin: 0 auto;*/
   }
 
   .visual-container {
