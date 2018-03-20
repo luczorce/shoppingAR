@@ -109,6 +109,7 @@
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const markers = detector.detect(imageData);
 
+    // TODO how can we make this more performant?
     locationContainer.innerHTML = '';
     markers.forEach(marker => drawLocationData(marker, context));
   }
@@ -150,18 +151,25 @@
     locontext.font = '2em monospace';
     locontext.fillText(`Location: ${marker.id}`, 10, 25);
 
-    locationContainer.appendChild(locanvas);
-    
-    // context.strokeStyle = 'red';
-    // context.lineWidth = 5;
 
-    // context.beginPath();
-    // context.moveTo(corners[0].x, corners[0].y);
-    // context.lineTo(corners[1].x, corners[1].y);
-    // context.lineTo(corners[2].x, corners[2].y);
-    // context.lineTo(corners[3].x, corners[3].y);
-    // context.lineTo(corners[0].x, corners[0].y);
-    // context.stroke();
+    locationContainer.appendChild(locanvas);
+    let transform = new PerspectiveTransform(locanvas, 200, 150, true);
+    transform.topLeft.x = corners[0].x;
+    transform.topLeft.y = corners[0].y;
+    transform.topRight.x = corners[1].x;
+    transform.topRight.y = corners[1].y;
+    transform.bottomRight.x = corners[2].x;
+    transform.bottomRight.y = corners[2].y;
+    transform.bottomLeft.x = corners[3].x;
+    transform.bottomLeft.y = corners[3].y;
+
+    if (transform.checkError() === 0) {
+      transform.update();
+      locanvas.style.display = 'block';
+    } else {
+      console.log('error with PerspectiveTransform');
+      locanvas.style.display = "none"; // hide the element
+    }
   }
 
   function handleError(error) {
@@ -173,6 +181,8 @@
     canvas = document.getElementById('canvas');
     locationContainer = document.getElementById('locations');
     size = determineWindowSize();
+
+    locationContainer.style.width = size.width + 'px';
   }
 
   function initAR() {
@@ -222,11 +232,17 @@
     margin: 0 auto;
   }
 
-  /*.location-data {
-    background: tomato;
+  .visual-container {
+    position: relative;
+  }
+
+  .location-data {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .location-data canvas {
     border: 2px black solid;
-  }*/
+  }
 </style>

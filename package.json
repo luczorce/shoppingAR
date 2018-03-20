@@ -40,8 +40,14 @@
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
-    ]
+    ],
+    "globals": {
+      "PerspectiveTransform": true
+    }
   },
+  "eslintIgnore": [
+    "src/assets/perspectivetransform.min.js"
+  ],
   "postcss": {
     "plugins": {
       "autoprefixer": {}
