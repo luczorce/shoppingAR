@@ -11,182 +11,183 @@
 </template>
 
 <script>
-import augment from '../../node_modules/js-aruco/index.js'
+  import augment from '../../node_modules/js-aruco/index.js'
 
-let detector, markerInterval;
-let drawingInterval;
-let canvas, size, stream, video;
-let mediaDeviceIds = [];
-let mediaDeviceIndex = 0;
+  let detector, markerInterval;
+  let drawingInterval;
+  let canvas, size, stream, video;
+  let mediaDeviceIds = [];
+  let mediaDeviceIndex = 0;
 
-export default {
-  name: 'home',
-  data: function() {
+  export default {
+    name: 'home',
+    data: function() {
+      return {
+        noCamera: false,
+        checkedCamera: false
+      };
+    },
+    methods: {
+      toggleCamera: toggleCamera
+    },
+    mounted() {
+      init();
+
+      if (detectGetUserMedia()) {
+        initAR();
+
+        // NOTE in webRTC example, this is run first
+        navigator.mediaDevices.enumerateDevices()
+          .then(storeVideoDevices)
+          .catch(handleError);
+
+        // NOTE in webRTC example this immediately follows enumerateDevices
+        // there is no chaining, no waiting for the promise to resolve ???
+        connectToCamera();
+      } else {
+        this.noCamera = true;
+      }
+
+      this.checkedCamera = true;
+    }
+  }
+
+  //////
+
+  function caughtCameraStream(devicestream) {
+    stream = devicestream;
+    video.srcObject = stream;
+
+    drawingInterval = requestAnimationFrame(drawVideoToCanvas);
+    markerInterval = requestAnimationFrame(detectMarker);
+
+    // NOTE in webRTC example, they search for the devices again
+    return navigator.mediaDevices.enumerateDevices();
+  }
+
+  function connectToCamera() {
+    let constraints = createConstraints();
+    
+    // stop any running stream
+    stopStream();
+
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(caughtCameraStream)
+      .then(storeVideoDevices)
+      .catch(handleError);
+  }
+
+  function createConstraints() {
+    const deviceId = (mediaDeviceIds.length) ? {exact: mediaDeviceIds[mediaDeviceIndex]} : undefined;
+
     return {
-      noCamera: false,
-      checkedCamera: false
+      video: {
+        // TODO bring this back when we get safari working
+        // width: {max: size.width},
+        // height: {max: size.height},
+        deviceId: deviceId
+      }
     };
-  },
-  methods: {
-    toggleCamera: toggleCamera
-  },
-  mounted() {
-    init();
+  }
 
-    if (detectGetUserMedia()) {
-      initAR();
+  function detectGetUserMedia() {
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.enumerateDevices);
+  }
 
-      // NOTE in webRTC example, this is run first
-      navigator.mediaDevices.enumerateDevices()
-        .then(storeVideoDevices)
-        .catch(handleError);
+  function detectMarker() {
+    const context = canvas.getContext('2d');
+    
+    window.requestAnimationFrame(detectMarker);
+    if (!canvas.height) return;
 
-      // NOTE in webRTC example this immediately follows enumerateDevices
-      // there is no chaining, no waiting for the promise to resolve ???
-      connectToCamera();
-    } else {
-      this.noCamera = true;
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    const markers = detector.detect(imageData);
+
+    // markers.forEach(function(marker) {
+    //   drawLocationData(marker, context);
+    // });
+
+    markers.forEach(marker => drawLocationData(marker, context));
+  }
+
+  function determineWindowSize() {
+    const offset = 50;
+    const square = window.innerWidth - offset;
+    
+    return {
+      width: square,
+      height: square
+    }
+  }
+
+  function determineCanvasSize() {
+    canvas.width = size.width;
+    canvas.height = (size.width / video.videoWidth) * video.videoHeight;
+  }
+
+  function drawVideoToCanvas() {
+    // TODO why cant we do this once?
+    determineCanvasSize();
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    window.requestAnimationFrame(drawVideoToCanvas);
+  }
+
+  function drawLocationData(marker, context) {
+    let corners = marker.corners;
+    
+    context.strokeStyle = 'red';
+    context.lineWidth = 5;
+
+    context.beginPath();
+    context.moveTo(corners[0].x, corners[0].y);
+    context.lineTo(corners[1].x, corners[1].y);
+    context.lineTo(corners[2].x, corners[2].y);
+    context.lineTo(corners[3].x, corners[3].y);
+    context.lineTo(corners[0].x, corners[0].y);
+    context.stroke();
+  }
+
+  function handleError(error) {
+    console.log(error);
+  }
+
+  function init() {
+    video = document.getElementById('video');
+    canvas = document.getElementById('canvas');
+    size = determineWindowSize();
+  }
+
+  function initAR() {
+    detector = new augment.AR.Detector();
+  }
+
+  function storeVideoDevices(devices) {
+    let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
+    mediaDeviceIds = videoDevices.map(dev => dev.deviceId);
+  }
+
+  function stopStream() {
+    if (!stream) return;
+
+    stream.getTracks().forEach(track => {
+      track.stop();
+    });
+  }
+
+  // move through the mediaDevices, updating the source of the video stream
+  function toggleCamera() {
+    if (markerInterval) window.cancelAnimationFrame(markerInterval);
+    if (drawingInterval) window.cancelAnimationFrame(drawingInterval);
+
+    mediaDeviceIndex++;
+
+    if (mediaDeviceIndex === mediaDeviceIds.length) {
+      mediaDeviceIndex = 0;
     }
 
-    this.checkedCamera = true;
+    connectToCamera();
   }
-}
-
-//////
-
-function caughtCameraStream(devicestream) {
-  stream = devicestream;
-  video.srcObject = stream;
-
-  drawingInterval = requestAnimationFrame(drawVideoToCanvas);
-  markerInterval = requestAnimationFrame(detectMarker);
-
-  // NOTE in webRTC example, they search for the devices again
-  return navigator.mediaDevices.enumerateDevices();
-}
-
-function connectToCamera() {
-  let constraints = createConstraints();
-  
-  // stop any running stream
-  stopStream();
-
-  navigator.mediaDevices.getUserMedia(constraints)
-    .then(caughtCameraStream)
-    .then(storeVideoDevices)
-    .catch(handleError);
-}
-
-function createConstraints() {
-  const deviceId = (mediaDeviceIds.length) ? {exact: mediaDeviceIds[mediaDeviceIndex]} : undefined;
-
-  return {
-    video: {
-      // TODO bring this back when we get safari working
-      // width: {max: size.width},
-      // height: {max: size.height},
-      deviceId: deviceId
-    }
-  };
-}
-
-function detectGetUserMedia() {
-  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.enumerateDevices);
-}
-
-function detectMarker() {
-  const context = canvas.getContext('2d');
-  
-  window.requestAnimationFrame(detectMarker);
-  if (!canvas.height) return;
-
-  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  const markers = detector.detect(imageData);
-
-  markers.forEach(function(marker) {
-    drawLocationData(marker, context);
-  });
-
-}
-
-function determineWindowSize() {
-  const offset = 50;
-  const square = window.innerWidth - offset;
-  
-  return {
-    width: square,
-    height: square
-  }
-}
-
-function determineCanvasSize() {
-  canvas.width = size.width;
-  canvas.height = (size.width / video.videoWidth) * video.videoHeight;
-}
-
-function drawVideoToCanvas() {
-  // TODO why cant we do this once?
-  determineCanvasSize();
-  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  window.requestAnimationFrame(drawVideoToCanvas);
-}
-
-function drawLocationData(marker, context) {
-  let corners = marker.corners;
-  
-  context.strokeStyle = 'red';
-  context.lineWidth = 5;
-
-  context.beginPath();
-  context.moveTo(corners[0].x, corners[0].y);
-  context.lineTo(corners[1].x, corners[1].y);
-  context.lineTo(corners[2].x, corners[2].y);
-  context.lineTo(corners[3].x, corners[3].y);
-  context.lineTo(corners[0].x, corners[0].y);
-  context.stroke();
-}
-
-function handleError(error) {
-  console.log(error);
-}
-
-function init() {
-  video = document.getElementById('video');
-  canvas = document.getElementById('canvas');
-  size = determineWindowSize();
-}
-
-function initAR() {
-  detector = new augment.AR.Detector();
-}
-
-function storeVideoDevices(devices) {
-  let videoDevices = devices.filter(dev => dev.kind === 'videoinput');
-  mediaDeviceIds = videoDevices.map(dev => dev.deviceId);
-}
-
-function stopStream() {
-  if (!stream) return;
-
-  stream.getTracks().forEach(track => {
-    track.stop();
-  });
-}
-
-// move through the mediaDevices, updating the source of the video stream
-function toggleCamera() {
-  if (markerInterval) window.cancelAnimationFrame(markerInterval);
-  if (drawingInterval) window.cancelAnimationFrame(drawingInterval);
-
-  mediaDeviceIndex++;
-
-  if (mediaDeviceIndex === mediaDeviceIds.length) {
-    mediaDeviceIndex = 0;
-  }
-
-  connectToCamera();
-}
 
 </script>
 
