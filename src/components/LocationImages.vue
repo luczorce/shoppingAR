@@ -10,16 +10,23 @@
 
   export default {
     name: 'LocationImages',
+    props: {
+      bus: {type: Object, required: true}
+    },
     mounted() {
       findAllImages();
+      this.bus.$on('detectedMarkerData', gotMarkerData);
     }
   }
 
   //////
 
   function findAllImages() {
-    // locationContainer.style.width = size.width + 'px';
-    images.push(new Image('cafe-image'));
+    images.push(new Image('cafe-image', 11));
+  }
+
+  function gotMarkerData(markers) {
+    // console.log(markers);
   }
 
   //////
@@ -35,7 +42,7 @@
     left: 0;
     /* TODO check that this makes it the right size*/
     right: 0;
-    background: rgba(20, 40, 100, 0.5);
+    height: 100%;
   }
 
   .location-data img {

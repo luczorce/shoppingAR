@@ -1,4 +1,5 @@
-function Image(elementId) {
+function Image(elementId, markerId) {
+  this.id = markerId;
   this.element = document.getElementById(elementId);
   this.hidden = true;
   this.transform = new PerspectiveTransform(this.element, this.element.naturalWidth, this.element.naturalHeight, true);

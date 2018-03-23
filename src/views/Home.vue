@@ -12,7 +12,7 @@
 
     <div class="visual-container">
       <Camera v-bind:bus="bus" />
-      <LocationImages />
+      <LocationImages v-bind:bus="bus" />
     </div>
   </div>
 </template>

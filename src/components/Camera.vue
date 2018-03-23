@@ -13,6 +13,7 @@
   let canvas, stream, video;
   let mediaDeviceIds = [];
   let mediaDeviceIndex = 0;
+  let TEST;
 
   export default {
     name: 'Camera',
@@ -33,6 +34,7 @@
       this.bus.$on('toggleCamera', this.toggleCamera);
 
       if (noCamera) return false;
+      TEST = this;
       init();
 
       // NOTE in webRTC example, this is run first
@@ -100,8 +102,7 @@
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const markers = detector.detect(imageData);
 
-    // TODO how we do this now?
-    markers.forEach(marker => drawLocationData(marker));
+    TEST.bus.$emit('detectedMarkerData', markers);
   }
 
   function determineCanvasSize() {
@@ -112,12 +113,7 @@
 
   function drawVideoToCanvas() {
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
     window.requestAnimationFrame(drawVideoToCanvas);
-  }
-
-  function drawLocationData(marker) {
-    console.log(marker);
   }
 
   function handleError(error) {
@@ -167,6 +163,6 @@
   }
 
   canvas {
-    /*display: none;*/
+    display: none;
   }
 </style>
