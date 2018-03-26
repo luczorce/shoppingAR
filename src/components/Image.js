@@ -1,21 +1,32 @@
-function Image(elementId, markerId) {
+function Image(elementId, markerId, imageWidth, imageHeight) {
   this.id = markerId;
   this.element = document.getElementById(elementId);
   this.hidden = true;
-  this.transform = new PerspectiveTransform(this.element, this.element.naturalWidth, this.element.naturalHeight, true);
+  this.transform = new PerspectiveTransform(this.element, imageWidth, imageHeight, true);
 }
 
-Image.prototype.hide = () => {
-  this.element.style = 'none';
+Image.prototype.hide = hide;
+Image.prototype.show = show;
+Image.prototype.updateWarp = updateWarp;
+
+export default Image;
+
+//////
+
+function hide() {
+  this.element.style.display = 'none';
   this.hidden = true;
-};
+}
 
-Image.prototype.show = () => {
-  this.element.style = 'block';
+function show() {
+  this.element.style.display = 'block';
   this.hidden = false;
-};
+}
 
-Image.prototype.updateWarp = (corners) => {
+function updateWarp(corners) {
+  // TODO how to make this invasive?
+  // this keeps the image constrained to the marker
+  // perhaps we want it to be YUGE
   this.transform.topLeft.x = corners[0].x;
   this.transform.topLeft.y = corners[0].y;
   this.transform.topRight.x = corners[1].x;
@@ -27,11 +38,9 @@ Image.prototype.updateWarp = (corners) => {
 
   if (this.transform.checkError() === 0) {
     this.transform.update();
-    this.element.show();
+    // this.show();
   } else {
     console.log('error with PerspectiveTransform');
-    this.element.hide();
+    this.hide();
   }
-};
-
-export default Image;
+}
