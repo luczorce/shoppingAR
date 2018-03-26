@@ -4,7 +4,8 @@ const LocationData = {
   locations: locations,
   checkin: checkin,
   find: findLocation,
-  init: init
+  init: init,
+  update: updateStorage
 };
 
 export default LocationData;
@@ -12,7 +13,16 @@ export default LocationData;
 //////
 
 function checkin(id) {
-  this.locations.find((loc) => loc.id === id).checkedin = true;
+  const alreadyCheckedIn = this.locations.find((loc) => loc.id === id).checkedin;
+
+  if (alreadyCheckedIn) {
+    return false;
+  } else {
+    this.locations.find((loc) => loc.id === id).checkedin = true;
+    // TODO make this work
+    // this.update();
+    return true;
+  }
 }
 
 function findLocation(id) {
@@ -21,4 +31,8 @@ function findLocation(id) {
 
 function init() {
   // TODO read LocalStorage data to update the data
+}
+
+function updateStorage() {
+  // TODO call after each checkin to ensure updating the location
 }

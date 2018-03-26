@@ -17,12 +17,12 @@
 
     <div class="messages">
       <button v-if="showLocationButton" @click="showModal = true">Check into {{ currentLocation.name }}</button>
-      <!-- use the modal component, pass in the prop -->
-      <modal v-if="showModal" @close="showModal = false">
-        <!-- you can use custom content here to overwrite default content -->
+      
+      <modal v-if="showModal" @close="showModal = false" v-bind:bus="bus" :locationId="currentLocation.id">
         <h3 slot="header">{{ currentLocation.name }}</h3>
         <p slot="body">{{ currentLocation.description }}</p>
         <span slot="footertext" v-if="!currentLocation.checkedin">Check In</span>
+        <span slot="footertext" v-if="currentLocation.checkedin">Close</span>
       </modal>
     </div>
   </div>
@@ -74,6 +74,13 @@
 
         if (this.showLocationButton) {
           this.currentLocation = LocationData.find(markers.pop().id);
+        }
+      });
+
+      this.bus.$on('checkin', (locationId) => {
+        let result = LocationData.checkin(locationId);
+        if (result) {
+          // TODO celebrate
         }
       });
     }
