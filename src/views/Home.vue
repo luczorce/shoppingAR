@@ -22,6 +22,7 @@
         <!-- you can use custom content here to overwrite default content -->
         <h3 slot="header">{{ currentLocation.name }}</h3>
         <p slot="body">{{ currentLocation.description }}</p>
+        <span slot="footertext" v-if="!currentLocation.checkedin">Check In</span>
       </modal>
     </div>
   </div>
