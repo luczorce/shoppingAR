@@ -16,11 +16,12 @@
     </div>
 
     <div class="messages">
-      <button v-if="showLocationButton" @click="showModal = true">Show Modal</button>
+      <button v-if="showLocationButton" @click="showModal = true">Check into {{ currentLocation.name }}</button>
       <!-- use the modal component, pass in the prop -->
       <modal v-if="showModal" @close="showModal = false">
         <!-- you can use custom content here to overwrite default content -->
-        <h3 slot="header">custom header</h3>
+        <h3 slot="header">{{ currentLocation.name }}</h3>
+        <p slot="body">{{ currentLocation.description }}</p>
       </modal>
     </div>
   </div>
@@ -31,6 +32,7 @@
   import Camera from '@/components/Camera.vue';
   import LocationImages from '@/components/LocationImages.vue';
   import Modal from '@/components/Modal.vue';
+  import LocationData from '@/components/LocationData';
 
   export default {
     name: 'home',
@@ -45,7 +47,8 @@
         checkedCamera: null,
         cameraExists: null,
         showModal: false,
-        showLocationButton: false
+        showLocationButton: false,
+        currentLocation: null
       };
     },
     methods: {
@@ -54,16 +57,23 @@
       }
     },
     created() {
+      // TODO use LocalStorage to prime the LocationData with what a user has searched already
+      // LocationData.init()
+
       this.bus.$on('checkedCameraResults', (noCamera) => {
         this.checkedCamera = true;
         this.cameraExists = !noCamera;
       });
 
-      this.bus.$on('detectedMarkerData', (markers) => {
+      this.bus.$on('detectedLocationData', (markers) => {
         // TODO I wonder how changing values really works here?
         // Like if I 'reassign' a value from true to true, is it really changing
         // being really senstitive to immutable forms of data storage right now
         this.showLocationButton = markers.length;
+
+        if (this.showLocationButton) {
+          this.currentLocation = LocationData.find(markers.pop().id);
+        }
       });
     }
   }

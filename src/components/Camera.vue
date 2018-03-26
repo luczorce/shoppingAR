@@ -103,6 +103,10 @@
     const markers = detector.detect(imageData);
 
     THAT.bus.$emit('detectedMarkerData', markers);
+    // TODO look up this behavior, if two places are looking
+    // for the emit event, only one will catch it
+    // Camera is $emit, both Home and LocationImages are $on watching... only Home will catch it
+    THAT.bus.$emit('detectedLocationData', markers);
   }
 
   function determineCanvasSize() {
