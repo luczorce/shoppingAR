@@ -14,25 +14,37 @@
       <Camera v-bind:bus="bus" />
       <LocationImages v-bind:bus="bus" />
     </div>
+
+    <div class="messages">
+      <button @click="showModal = true">Show Modal</button>
+      <!-- use the modal component, pass in the prop -->
+      <modal v-if="showModal" @close="showModal = false">
+        <!-- you can use custom content here to overwrite default content -->
+        <h3 slot="header">custom header</h3>
+      </modal>
+    </div>
   </div>
 </template>
 
 <script>
   import Vue from 'vue';
   import Camera from '@/components/Camera.vue';
-  import LocationImages from '@/components/LocationImages.vue'
+  import LocationImages from '@/components/LocationImages.vue';
+  import Modal from '@/components/Modal.vue';
 
   export default {
     name: 'home',
     components: {
       Camera,
-      LocationImages
+      LocationImages,
+      Modal
     },
     data() {
       return {
         bus: new Vue(),
         checkedCamera: null,
-        cameraExists: null
+        cameraExists: null,
+        showModal: false
       };
     },
     methods: {
