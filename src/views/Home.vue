@@ -59,7 +59,7 @@
     },
     created() {
       // TODO use LocalStorage to prime the LocationData with what a user has searched already
-      // LocationData.init()
+      LocationData.init();
 
       this.bus.$on('checkedCameraResults', (noCamera) => {
         this.checkedCamera = true;
