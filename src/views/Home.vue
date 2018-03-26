@@ -16,7 +16,7 @@
     </div>
 
     <div class="messages">
-      <button @click="showModal = true">Show Modal</button>
+      <button v-if="showLocationButton" @click="showModal = true">Show Modal</button>
       <!-- use the modal component, pass in the prop -->
       <modal v-if="showModal" @close="showModal = false">
         <!-- you can use custom content here to overwrite default content -->
@@ -44,7 +44,8 @@
         bus: new Vue(),
         checkedCamera: null,
         cameraExists: null,
-        showModal: false
+        showModal: false,
+        showLocationButton: false
       };
     },
     methods: {
@@ -56,6 +57,13 @@
       this.bus.$on('checkedCameraResults', (noCamera) => {
         this.checkedCamera = true;
         this.cameraExists = !noCamera;
+      });
+
+      this.bus.$on('detectedMarkerData', (markers) => {
+        // TODO I wonder how changing values really works here?
+        // Like if I 'reassign' a value from true to true, is it really changing
+        // being really senstitive to immutable forms of data storage right now
+        this.showLocationButton = markers.length;
       });
     }
   }
