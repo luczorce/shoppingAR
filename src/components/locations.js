@@ -1,4 +1,5 @@
 export default [
+// TODO add secret to the secret locations
   {
     id: 11,
     name: "Test Location",

@@ -58,7 +58,6 @@
       }
     },
     created() {
-      // TODO use LocalStorage to prime the LocationData with what a user has searched already
       LocationData.init();
 
       this.bus.$on('checkedCameraResults', (noCamera) => {
@@ -79,6 +78,8 @@
 
       this.bus.$on('checkin', (locationId) => {
         let result = LocationData.checkin(locationId);
+        LocationData.update();
+
         if (result) {
           // TODO celebrate
         }

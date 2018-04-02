@@ -30,7 +30,6 @@ function findLocation(id) {
 }
 
 function init() {
-  // TODO read LocalStorage data to update the data
   if (!testLocalStorage()) return;
   let store = localStorage.getItem(LOCAL_STORAGE_KEY);
 
@@ -40,7 +39,6 @@ function init() {
   } else {
     this.locations.forEach(loc => loc.checkedin = false);
   }
-
 }
 
 function updateStorage() {
