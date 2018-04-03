@@ -69,10 +69,21 @@
         // TODO I wonder how changing values really works here?
         // Like if I 'reassign' a value from true to true, is it really changing
         // being really senstitive to immutable forms of data storage right now
-        this.showLocationButton = markers.length;
+        this.showLocationButton = Boolean(markers.length);
 
         if (this.showLocationButton) {
-          this.currentLocation = LocationData.find(markers.pop().id);
+          const applicableMarkers = markers.filter(m => LocationData.locations.find(l => l.id === m.id));
+          let firstMarkerId;
+
+          try {  
+            firstMarkerId = applicableMarkers.pop().id;
+          } catch(error) {
+            // do nothing with the error, we're moving too fast with requestAnimationFrame
+          }
+
+          if (firstMarkerId) {
+            this.currentLocation = LocationData.find(firstMarkerId);
+          }
         }
       });
 
