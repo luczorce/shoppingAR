@@ -18,9 +18,8 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <slot name="footertext">finish here</slot>
-              <button type="button" class="modal-default-button" @click="$emit('close')">
-                OK
+              <button type="button" class="modal-default-button" @click="checkAndClose">
+                <slot name="footertext">finish here</slot>
               </button>
             </slot>
           </div>
@@ -31,6 +30,20 @@
 </template>
 
 <script>
+
+export default {
+  name: 'modal',
+  props: {
+    bus: {type: Object, required: true},
+    locationId: {type: Number, required: true}
+  },
+  methods: {
+    checkAndClose() {
+      this.$emit('close');
+      this.bus.$emit('checkin', this.locationId);
+    }
+  }
+}
 </script>
 
 <style>
@@ -72,7 +85,7 @@
   }
 
   .modal-default-button {
-    float: right;
+    /*float: right;*/
   }
 
   /*
