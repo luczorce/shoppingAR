@@ -35,20 +35,20 @@
   //////
 
   function findAllImages() {
+    images.push(new Image('bay-image', 895, 374, 374));
+    images.push(new Image('cancrusher-image', 63, 219, 219));
+    images.push(new Image('coffee-image', 184, 328, 328));
     images.push(new Image('easteregg-image', 11, 360, 270));
-    images.push(new Image('coffee-image', 184, 400, 328));
-    images.push(new Image('pop-image', 441, 320, 240));
-    images.push(new Image('recycle-image', 430, 480, 360));
-    images.push(new Image('trash-image', 829, 225, 180));
-    images.push(new Image('cancrusher-image', 63, 390, 219));
-    images.push(new Image('lounge-image', 293, 250, 143));
-    images.push(new Image('general-image', 967, 250, 140));
-    images.push(new Image('mailbox-image', 273, 648, 486));
     images.push(new Image('fountain-image', 535, 400, 400));
-    images.push(new Image('toilet-image', 71, 368, 340));
+    images.push(new Image('general-image', 967, 250, 140));
+    images.push(new Image('heater-image', 546, 362, 362));
+    images.push(new Image('lounge-image', 293, 143, 143));
+    images.push(new Image('mailbox-image', 273, 486, 486));
+    images.push(new Image('pop-image', 441, 240, 240));
+    images.push(new Image('recycle-image', 430, 360, 360));
     images.push(new Image('sharpie-image', 680, 480, 362));
-    images.push(new Image('bay-image', 895, 499, 374));
-    images.push(new Image('heater-image', 546, 500, 362));
+    images.push(new Image('toilet-image', 71, 340, 340));
+    images.push(new Image('trash-image', 829, 180, 180));
   }
 
   function gotMarkerData(markers) {
