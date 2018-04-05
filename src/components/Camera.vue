@@ -47,7 +47,7 @@
       connectToCamera();
     },
     destroyed() {
-      // window.removeEventListener('resize', determineCanvasSize, false);
+      window.removeEventListener('resize', determineCanvasSize, false);
     }
   }
 
