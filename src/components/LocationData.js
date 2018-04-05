@@ -2,10 +2,11 @@ import locations from '@/components/locations';
 const LOCAL_STORAGE_KEY = 'shopping-ar-ignite';
 
 const LocationData = {
-  locations: locations,
   checkin: checkin,
+  clear: clearLocalStorage,
   find: findLocation,
   init: init,
+  locations: locations,
   update: updateStorage
 };
 
@@ -25,12 +26,22 @@ function checkin(id) {
   }
 }
 
+function clearLocalStorage() {
+  if (testLocalStorage()) {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function findLocation(id) {
   return this.locations.find((loc) => loc.id === id);
 }
 
 function init() {
   if (!testLocalStorage()) return;
+  console.log('initing locationData');
   let store = localStorage.getItem(LOCAL_STORAGE_KEY);
 
   if (store) {
