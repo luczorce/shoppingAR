@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-game">
     <div>
       <p v-if="checkedCamera && !cameraExists">
         Sorry, you'll need a camera and a <span title="Android Chrome or Apple Safari :(">specific</span> device in order to experience this.

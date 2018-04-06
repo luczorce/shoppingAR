@@ -53,7 +53,6 @@ function init() {
 }
 
 function updateStorage() {
-  // TODO call after each checkin to ensure updating the location
   if (!testLocalStorage()) return;
   
   let store = [];
@@ -63,6 +62,7 @@ function updateStorage() {
     delete clone.name;
     delete clone.description;
     delete clone.optional;
+    delete clone.secret;
 
     store.push(clone);
   });
