@@ -1,6 +1,6 @@
 <template>
   <div class="page-home">
-    <h1>Welcome to the 114 Demo</h1>
+    <h1>Welcome <span v-if="hasBeenHere">back</span> to the 114 Demo</h1>
     <p>Please take a walk around the office, and see what you can find...</p>
     <p><em>This is intended to be a mobile experience, so please use Android Chrome or iOS Safari browsers.</em></p>
 
@@ -9,8 +9,20 @@
 </template>
 
 <script>
+  import LocationData from '@/components/LocationData';
+
   export default {
-    name: 'home'
+    name: 'home',
+    data() {
+      return {
+        hasBeenHere: null
+      }
+    },
+    created() {
+      const beenHereBefore = LocationData.init();
+      console.log(beenHereBefore);
+      this.hasBeenHere = beenHereBefore;
+    }
   }
 </script>
 

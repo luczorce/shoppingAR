@@ -41,14 +41,16 @@ function findLocation(id) {
 
 function init() {
   if (!testLocalStorage()) return;
-  console.log('initing locationData');
   let store = localStorage.getItem(LOCAL_STORAGE_KEY);
 
   if (store) {
     store = JSON.parse(store);
     this.locations.forEach(loc => loc.checkedin = store.find(str => str.id === loc.id).checkedin);
+    return true;
   } else {
     this.locations.forEach(loc => loc.checkedin = false);
+    this.update();
+    return false;
   }
 }
 
