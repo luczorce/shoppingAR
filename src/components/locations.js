@@ -78,7 +78,7 @@ export default [
     description: "Find the finest of papers here, plus a surplus of writing utensils.",
     optional: [
       {
-        condition: {id: 680, checkedin: false},
+        condition: [{id: 680, checkedin: false}],
         description: "Grab a whif of a sharpie for some good times."
       }
     ],
@@ -105,7 +105,7 @@ export default [
     description: "You know what you gotta do in here...",
     optional: [
       {
-        condition: {id: 535, checkedin: true},
+        condition: [{id: 535, checkedin: true}],
         description: "There's water in here too, but you shouldn't drink it"
       }
     ],

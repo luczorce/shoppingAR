@@ -19,9 +19,7 @@
       }
     },
     created() {
-      const beenHereBefore = LocationData.init();
-      console.log(beenHereBefore);
-      this.hasBeenHere = beenHereBefore;
+      this.hasBeenHere = LocationData.init();
     }
   }
 </script>

@@ -20,7 +20,11 @@
       
       <modal v-if="showModal" @close="showModal = false" v-bind:bus="bus" :locationId="currentLocation.id">
         <h3 slot="header">{{ currentLocation.name }}</h3>
-        <p slot="body">{{ currentLocation.description }}</p>
+        <div slot="body">
+          <p>{{ currentLocation.description }}</p>
+
+          <p v-for="(opt, optIndex) in currentLocation.optional" v-bind:key="currentLocation.id + '-' + optIndex" v-if="checkOptional(opt)">{{opt.description}}</p>
+        </div>
         <span slot="footertext" v-if="!currentLocation.checkedin">Check In</span>
         <span slot="footertext" v-if="currentLocation.checkedin">Close</span>
       </modal>
@@ -55,6 +59,10 @@
     methods: {
       emitToggleCamera() {
         this.bus.$emit('toggleCamera');
+      },
+      checkOptional(optionalData) {
+        console.log('checking optional in Game component');
+        return LocationData.crossCheck(optionalData);
       }
     },
     created() {
