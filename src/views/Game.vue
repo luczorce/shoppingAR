@@ -15,6 +15,8 @@
       <LocationImages v-bind:bus="bus" />
     </div>
 
+    <!-- <p><button type="button" @click="testAnimation">test animation</button></p> -->
+
     <div class="messages">
       <button v-if="showLocationButton" @click="showModal = true">Check into {{ currentLocation.name }}</button>
       
@@ -28,6 +30,11 @@
         <span slot="footertext" v-if="!currentLocation.checkedin">Check In</span>
         <span slot="footertext" v-if="currentLocation.checkedin">Close</span>
       </modal>
+
+      <modal-plain v-if="showCongratulationModal" @close="showCongratulationModal = false">
+        <h3 slot="header">Congratulations!</h3>
+        <p slot="body">You've found all the locations in the game, even the hidden ones! <strong>Nice job!</strong></p>
+      </modal-plain>
     </div>
 
     <div class="celebrate" aria-hidden="true">
@@ -36,23 +43,30 @@
           yeah<template>{{Array(15 - this.remainingCheckins).join('!')}}</template>
         </span>
       </transition>
+
+      <transition name="bam">
+        <p class="all-finished" v-if="this.showFinishedCelebrate">WOW</p>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
   import Vue from 'vue';
+
   import Camera from '@/components/Camera.vue';
   import LocationImages from '@/components/LocationImages.vue';
-  import Modal from '@/components/Modal.vue';
   import LocationData from '@/components/LocationData';
+  import Modal from '@/components/Modal.vue';
+  import ModalPlain from '@/components/ModalPlain';
 
   export default {
     name: 'game',
     components: {
       Camera,
       LocationImages,
-      Modal
+      Modal,
+      ModalPlain
     },
     data() {
       return {
@@ -62,8 +76,10 @@
         currentLocation: null,
         remainingCheckins: null,
         showCelebrateCheckin: false,
+        showCongratulationModal: false,
+        showFinishedCelebrate: false,
+        showLocationButton: false,
         showModal: false,
-        showLocationButton: false
       }
     },
     methods: {
@@ -82,7 +98,11 @@
 
         if (result) {
           if (this.remainingCheckins === LocationData.locations.length) {
-            // TODO celebrate all the checkins
+            this.showFinishedCelebrate = true;
+            window.setTimeout(() => {
+              this.showFinishedCelebrate = false;
+              this.showCongratulationModal = true;
+            }, 2000);
           } else {
             // celebrate a single checkin
             this.showCelebrateCheckin = true;
@@ -117,6 +137,13 @@
       updateRemainingCheckins() {
         const checkedin = LocationData.locations.filter(loc => loc.checkedin);
         this.remainingCheckins = LocationData.locations.length - checkedin.length;
+      },
+      testAnimation() {
+        this.showFinishedCelebrate = true;
+        window.setTimeout(() => {
+          this.showFinishedCelebrate = false;
+          this.showCongratulationModal = true;
+        }, 2000);
       }
     },
     created() {
@@ -157,5 +184,29 @@
   .flyin-leave-active {
     opacity: 0;
     transform: translateX(100%) rotate(40deg);
+  }
+
+  .all-finished {
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    padding: 10px 30px;
+    background: var(--light);
+    color: var(--dark);
+    text-align: center;
+    font-size: 5em;
+    font-weight: bold;
+    transition: all .1s ease;
+  }
+
+  .bam-enter {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  .bam-leave-active {
+    opacity: 0;
+    transform: translateY(100%);
   }
 </style>
