@@ -5,7 +5,7 @@
     <img src="img/gifs/coffee.gif" id="coffee-image" />
     <img src="img/gifs/easteregg.gif" id="easteregg-image" />
     <img src="img/gifs/fountain.gif" id="fountain-image" />
-    <img src="img/gifs/general.gif" id="general-image" />
+    <img src="img/gifs/store.gif" id="store-image" />
     <img src="img/gifs/heater.gif" id="heater-image" />
     <img src="img/gifs/lounge.gif" id="lounge-image" />
     <img src="img/gifs/mailbox.gif" id="mailbox-image" />
@@ -40,7 +40,7 @@
     images.push(new Image('coffee-image', 184, 328, 328));
     images.push(new Image('easteregg-image', 11, 360, 270));
     images.push(new Image('fountain-image', 535, 400, 400));
-    images.push(new Image('general-image', 967, 250, 140));
+    images.push(new Image('store-image', 967, 300, 300));
     images.push(new Image('heater-image', 546, 362, 362));
     images.push(new Image('lounge-image', 293, 143, 143));
     images.push(new Image('mailbox-image', 273, 486, 486));
