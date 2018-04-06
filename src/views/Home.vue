@@ -20,13 +20,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: var(--text-inv);
   }
-
-  .button-link {
-    line-height: 3;
-    padding: 15px 25px;
-    background: tomato;
-    color: white;
-    text-decoration: none;
-  } 
 </style>
