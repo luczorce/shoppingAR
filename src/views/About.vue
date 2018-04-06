@@ -2,7 +2,7 @@
   <div class="about">
     <h1>The AR Office Experiment</h1>
 
-    <p>This is a demo application for an office in Chicago, IL. While this has a lighthearted approach to the concept, treating this demo more like a game than anything else, it's intent is to display these AR and camera capabilities to the larger team.</p>
+    <p>This is a demo application for an office in Chicago, IL. While this has a lighthearted approach to the concept, treating this demo more like a game than anything else, its intent is to display these AR and camera capabilities to the larger team.</p>
 
     <p class="imagine">Imagine if this was in a mall? Building a customised journey for a user based on where they've been and where they could go?</p>
     <p class="imagine">Imagine being reminded to recycle your coffee cup at the next recycle bin you pass after a trip to Starbucks?</p>
