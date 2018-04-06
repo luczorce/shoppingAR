@@ -164,6 +164,8 @@
 
   video {
     width: 100%;
+    /* TODO consider this for adding depth to the screen */
+    /*box-shadow: 0 0 20px 14px rgba(255, 255, 255, 0.2);*/
   }
 
   canvas {

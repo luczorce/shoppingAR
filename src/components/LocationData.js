@@ -41,19 +41,20 @@ function findLocation(id) {
 
 function init() {
   if (!testLocalStorage()) return;
-  console.log('initing locationData');
   let store = localStorage.getItem(LOCAL_STORAGE_KEY);
 
   if (store) {
     store = JSON.parse(store);
     this.locations.forEach(loc => loc.checkedin = store.find(str => str.id === loc.id).checkedin);
+    return true;
   } else {
     this.locations.forEach(loc => loc.checkedin = false);
+    this.update();
+    return false;
   }
 }
 
 function updateStorage() {
-  // TODO call after each checkin to ensure updating the location
   if (!testLocalStorage()) return;
   
   let store = [];
@@ -63,6 +64,7 @@ function updateStorage() {
     delete clone.name;
     delete clone.description;
     delete clone.optional;
+    delete clone.secret;
 
     store.push(clone);
   });

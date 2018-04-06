@@ -19,7 +19,7 @@
           <div class="modal-footer">
             <slot name="footer">
               <button type="button" class="modal-default-button" @click="checkAndClose">
-                <slot name="footertext">finish here</slot>
+                <slot name="footertext">okay</slot>
               </button>
             </slot>
           </div>
@@ -32,21 +32,17 @@
 <script>
 
 export default {
-  name: 'modal',
-  props: {
-    bus: {type: Object, required: true},
-    locationId: {type: Number, required: true}
-  },
+  name: 'modal-plain',
   methods: {
     checkAndClose() {
       this.$emit('close');
-      this.bus.$emit('checkin', this.locationId);
     }
   }
 }
 </script>
 
 <style>
+  /*  how to make this a global style*/
   .modal-mask {
     position: fixed;
     z-index: 9998;

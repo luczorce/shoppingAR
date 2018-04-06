@@ -1,22 +1,24 @@
 export default [
-// TODO add secret to the secret locations
   {
     id: 11,
     name: "Test Location",
     description: "Here is a test location for development purposes. We may just leave this in here as an easter egg for all dem people to find.",
     checkedin: null,
+    secret: true
   },
   {
     id: 184,
     name: "Kafe",
     description: "Welcome to the Kitchen Cafe, where denizens can fight over which coffee maker brews the best cuppa. Or which hot water maker makes the hotest water. Enjoy a greek yogurt from our fridge and gather around the water cooler.",
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 441,
     name: "K'Bar",
     description: "This is the Kitchen Bar, where we can find the finest bubblies in the River West Hemisphere. Pampelmousse is the king around here, but shares the land with Lime, Diet Coke, and Ginger Ale. For the milk drinkers, you can have simple caffiene in the form of cold tea or the sugar burst from an athletic drink, and jog back to your cubicle.",
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 430,
@@ -28,7 +30,8 @@ export default [
         description: "Responsibly recycle your coffee stirrers, aluminum cans, and any plastics (cleaned in the sink) here!"
       }
     ],
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 829,
@@ -40,7 +43,8 @@ export default [
         description: "Please sift through your trash, and recycle what can be re-used."
       }
     ],
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 63,
@@ -52,7 +56,8 @@ export default [
         description: "Prove your loyalty to the All Mighty La Croix by making sure this recepticle is overflowing with the crushed carcasses of the fizzle swizzle you gotta guzzle down"
       }
     ],
-    checkedin: null
+    checkedin: null,
+    secret: true
   },
   {
     id: 293,
@@ -64,7 +69,8 @@ export default [
         description: "Go find the Kafe or the K'Bar for a drink and snack, and mozy on back here for a relaxing chat."
       }
     ],
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 967,
@@ -76,19 +82,22 @@ export default [
         description: "Grab a whif of a sharpie for some good times."
       }
     ],
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 273,
     name: "Post Office",
     description: "Wow, it's like a Mail Room that used to have a lot of use, but now people just get shit shipped here that they're too lazy to go to stores for. Nothing like excessive carbon emissions so I can try on 5 pairs of shoes from the comfort of my drouping couch.",
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 535,
     name: "Water Fountain",
     description: "Here, a relic of the past, we have water in cans now, kthkxbai",
-    checkedin: null
+    checkedin: null,
+    secret: true
   },
   {
     id: 71,
@@ -100,24 +109,28 @@ export default [
         description: "There's water in here too, but you shouldn't drink it"
       }
     ],
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 680,
     name: "The Silver Sharpies",
     description: "A true sign of affluence, and supper effing cool. SILVER. SHARPIES.",
-    checkedin: null
+    checkedin: null,
+    secret: true
   },
   {
     id: 895,
     name: "The Bay",
     description: "Area of Interest \n See where this experience started! Come find the prolific human who wanted to make this a reality, say Hi, and get sense for the conditions that drive this person a little barry[sic].",
-    checkedin: null
+    checkedin: null,
+    secret: false
   },
   {
     id: 546,
     name: "Heater Switch",
     description: "Did you know this was a heater switch? Hopefully, now you do.",
-    checkedin: null
+    checkedin: null,
+    secret: true
   },
 ];

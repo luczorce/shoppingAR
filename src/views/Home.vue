@@ -1,107 +1,37 @@
 <template>
-  <div>
-    <div>
-      <p v-if="checkedCamera && !cameraExists">
-        Sorry, you'll need a camera and a <span title="Android Chrome or Apple Safari :(">specific</span> device in order to experience this.
-      </p>
-        
-      <p v-if="checkedCamera && cameraExists" class="centered">
-        <button type="button" v-on:click="emitToggleCamera">toggle camera feed</button>
-      </p>
-    </div>
+  <div class="page-home">
+    <h1>Welcome <span v-if="hasBeenHere">back</span> to the 114 Demo</h1>
+    <p>Please take a walk around the office, and see what you can find...</p>
+    <p><em>This is intended to be a mobile experience, so please use Android Chrome or iOS Safari browsers.</em></p>
 
-    <div class="visual-container">
-      <Camera v-bind:bus="bus" />
-      <LocationImages v-bind:bus="bus" />
-    </div>
-
-    <div class="messages">
-      <button v-if="showLocationButton" @click="showModal = true">Check into {{ currentLocation.name }}</button>
-      
-      <modal v-if="showModal" @close="showModal = false" v-bind:bus="bus" :locationId="currentLocation.id">
-        <h3 slot="header">{{ currentLocation.name }}</h3>
-        <p slot="body">{{ currentLocation.description }}</p>
-        <span slot="footertext" v-if="!currentLocation.checkedin">Check In</span>
-        <span slot="footertext" v-if="currentLocation.checkedin">Close</span>
-      </modal>
-    </div>
+    <p><router-link to="/detecting" class="button-link">go explore</router-link></p>
   </div>
 </template>
 
 <script>
-  import Vue from 'vue';
-  import Camera from '@/components/Camera.vue';
-  import LocationImages from '@/components/LocationImages.vue';
-  import Modal from '@/components/Modal.vue';
   import LocationData from '@/components/LocationData';
 
   export default {
     name: 'home',
-    components: {
-      Camera,
-      LocationImages,
-      Modal
-    },
     data() {
       return {
-        bus: new Vue(),
-        checkedCamera: null,
-        cameraExists: null,
-        showModal: false,
-        showLocationButton: false,
-        currentLocation: null
-      };
-    },
-    methods: {
-      emitToggleCamera() {
-        this.bus.$emit('toggleCamera');
+        hasBeenHere: null
       }
     },
     created() {
-      LocationData.init();
-
-      this.bus.$on('checkedCameraResults', (noCamera) => {
-        this.checkedCamera = true;
-        this.cameraExists = !noCamera;
-      });
-
-      this.bus.$on('detectedLocationData', (markers) => {
-        // TODO I wonder how changing values really works here?
-        // Like if I 'reassign' a value from true to true, is it really changing
-        // being really senstitive to immutable forms of data storage right now
-        this.showLocationButton = Boolean(markers.length);
-
-        if (this.showLocationButton) {
-          const applicableMarkers = markers.filter(m => LocationData.locations.find(l => l.id === m.id));
-          let firstMarkerId;
-
-          try {  
-            firstMarkerId = applicableMarkers.pop().id;
-          } catch(error) {
-            // do nothing with the error, we're moving too fast with requestAnimationFrame
-          }
-
-          if (firstMarkerId) {
-            this.currentLocation = LocationData.find(firstMarkerId);
-          }
-        }
-      });
-
-      this.bus.$on('checkin', (locationId) => {
-        let result = LocationData.checkin(locationId);
-        LocationData.update();
-
-        if (result) {
-          // TODO celebrate
-        }
-      });
+      const beenHereBefore = LocationData.init();
+      console.log(beenHereBefore);
+      this.hasBeenHere = beenHereBefore;
     }
   }
-
 </script>
 
 <style>
-  .visual-container {
-    position: relative;
-  } 
+  .page-home {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--text-inv);
+  }
 </style>
