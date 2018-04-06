@@ -34,6 +34,7 @@ npm run deploy
 
 Generate the markers for printing
 
-```
-TODO
+``` bash
+// TODO proxy the aruco library to the directory with http-server
+npx http-server markers
 ```

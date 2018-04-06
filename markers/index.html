@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Aruco Markers</title>
+    <script src="aruco-marker.js"></script>
+    <style>
+      body { text-align: center; }
+      div { margin: 2em auto; }
+    </style>
+  </head>
+  <body>
+
+    <div id="marker-1"></div>
+    <div id="marker-2"></div>
+    <div id="marker-3"></div>
+    <div id="marker-4"></div>
+    <div id="marker-5"></div>
+    <div id="marker-6"></div>
+    <div id="marker-7"></div>
+    <div id="marker-8"></div>
+    <div id="marker-9"></div>
+    <div id="marker-10"></div>
+    <div id="marker-11"></div>
+    <div id="marker-12"></div>
+    <div id="marker-13"></div>
+    <div id="marker-14"></div>
+
+    <script >
+      const markers = [
+        11, 184, 441, 430,
+        829, 63, 293, 967,
+        273, 535, 71, 680,
+        895, 546,
+      ];
+
+      const size = '3in';
+
+      markers.forEach(generateMarker);
+
+      function generateMarker(id, index) {
+        var el = document.getElementById(`marker-${index + 1}`);
+        el.innerHTML = new ArucoMarker(id).toSVG(size);
+      }
+    </script>
+  </body>
+</html>
