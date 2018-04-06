@@ -16,7 +16,7 @@ export default [
   {
     id: 441,
     name: "K'Bar",
-    description: "This is the Kitchen Bar, where we can find the finest bubblies in the River West Hemisphere. Pampelmousse is the king around here, but shares the land with Lime, Diet Coke, and Ginger Ale. For the milk drinkers, you can have simple caffiene in the form of cold tea or the sugar burst from an athletic drink, and jog back to your cubicle.",
+    description: "This is the Kitchen Bar, where we can find the finest bubblies in the River North Hemisphere. Pampelmousse is the king around here, but shares the land with Lime, Diet Coke, and Ginger Ale. For the milk drinkers, you can have cold tea or athletic drink, and jog back to your cubicle.",
     checkedin: null,
     secret: false
   },
@@ -49,11 +49,11 @@ export default [
   {
     id: 63,
     name: "Can Crusher",
-    description: "Wanna give the denizens a good fright? Load up this can crusher for a smashing good time. The loud sizzle of a fizzle drank roaring in the ears of the denizens in this office is nothing to the satisfying crunch and similar heruclean muscle necessary to use this contraption.",
+    description: "Wanna give the office a good fright? Load up this can crusher for a smashing good time. The loud sizzle of a fizzle drank roaring in the our ears is nothing to the satisfying crunch and similar heruclean muscle necessary to use this contraption.",
     optional: [
       {
         condition: [{id: 441, checkedin: true}],
-        description: "Prove your loyalty to the All Mighty La Croix by making sure this recepticle is overflowing with the crushed carcasses of the fizzle swizzle you gotta guzzle down"
+        description: "Prove your loyalty to the All Mighty La Croix by making sure this recepticle is overflowing with the crushed carcasses of the fizzle swizzle you gotta guzzle down."
       }
     ],
     checkedin: null,
@@ -62,7 +62,7 @@ export default [
   {
     id: 293,
     name: "Lounge",
-    description: "This place may have been the center of life in this landscape at one point, but changing times and changing teams have left the populace concerned with the safety of the Lounge. \nRest assured, no sales teams will disurb you here, and there are stumps for your drinks and personal desktops. Great for disurbing the peace for the teams that sit in the area.",
+    description: "Stay a while and listen. Rest assured (pun intended), no sales teams will disurb you here, and there are stumps for your drinks and personal desktops. Great for disurbing the peace for the teams that sit in the area.",
     optional: [
       {
         condition: [{id: 184, checkedin: false}, {id: 441, checkedin: false}],
@@ -78,7 +78,7 @@ export default [
     description: "Find the finest of papers here, plus a surplus of writing utensils.",
     optional: [
       {
-        condition: {id: 680, checkedin: false},
+        condition: [{id: 680, checkedin: false}],
         description: "Grab a whif of a sharpie for some good times."
       }
     ],
@@ -88,14 +88,14 @@ export default [
   {
     id: 273,
     name: "Post Office",
-    description: "Wow, it's like a Mail Room that used to have a lot of use, but now people just get shit shipped here that they're too lazy to go to stores for. Nothing like excessive carbon emissions so I can try on 5 pairs of shoes from the comfort of my drouping couch.",
+    description: "Wow, it's like a Mail Room that used to have a lot of use, but now people just get sh*t shipped here that they're too lazy to go to stores for. Nothing like excessive carbon emissions so you can try on 5 pairs of shoes from the comfort of your sagging couch.",
     checkedin: null,
     secret: false
   },
   {
     id: 535,
     name: "Water Fountain",
-    description: "Here, a relic of the past, we have water in cans now, kthkxbai",
+    description: "Here, a relic of the past, we have water in cans now, kthkxbai.",
     checkedin: null,
     secret: true
   },
@@ -105,8 +105,8 @@ export default [
     description: "You know what you gotta do in here...",
     optional: [
       {
-        condition: {id: 535, checkedin: true},
-        description: "There's water in here too, but you shouldn't drink it"
+        condition: [{id: 535, checkedin: true}],
+        description: "There's water in here too, but you shouldn't drink it."
       }
     ],
     checkedin: null,
@@ -122,14 +122,14 @@ export default [
   {
     id: 895,
     name: "The Bay",
-    description: "Area of Interest \n See where this experience started! Come find the prolific human who wanted to make this a reality, say Hi, and get sense for the conditions that drive this person a little barry[sic].",
+    description: "Area of Interest: See where this experience started! Come find the (prolific?) human who wanted to make this a reality, say hi, and get sense for the conditions that drive this person a little barry[sic].",
     checkedin: null,
     secret: false
   },
   {
     id: 546,
     name: "Heater Switch",
-    description: "Did you know this was a heater switch? Hopefully, now you do.",
+    description: "Did you know this was a heater switch? Now you do.",
     checkedin: null,
     secret: true
   },

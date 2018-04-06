@@ -4,6 +4,7 @@ const LOCAL_STORAGE_KEY = 'shopping-ar-ignite';
 const LocationData = {
   checkin: checkin,
   clear: clearLocalStorage,
+  crossCheck: crossCheckOptional,
   find: findLocation,
   init: init,
   locations: locations,
@@ -33,6 +34,22 @@ function clearLocalStorage() {
   } else {
     return false;
   }
+}
+
+function crossCheckOptional(optionalData) {
+  const situation = optionalData.condition;
+  const THAT = this;
+  let showOptional = false;
+
+  if (!situation) return showOptional;
+
+  situation.forEach(sit => {
+    if (!showOptional && (THAT.find(sit.id).checkedin === sit.checkedin)) {
+      showOptional = true;
+    }
+  });
+
+  return showOptional;
 }
 
 function findLocation(id) {
