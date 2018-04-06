@@ -29,6 +29,14 @@
         <span slot="footertext" v-if="currentLocation.checkedin">Close</span>
       </modal>
     </div>
+
+    <div class="celebrate" aria-hidden="true">
+      <transition name="flyin">
+        <span class="single-checkin" v-if="this.showCelebrateCheckin">
+          yeah<template>{{Array(15 - this.remainingCheckins).join('!')}}</template>
+        </span>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -49,31 +57,43 @@
     data() {
       return {
         bus: new Vue(),
-        checkedCamera: null,
         cameraExists: null,
+        checkedCamera: null,
+        currentLocation: null,
+        remainingCheckins: null,
+        showCelebrateCheckin: false,
         showModal: false,
-        showLocationButton: false,
-        currentLocation: null
-      };
+        showLocationButton: false
+      }
     },
     methods: {
       emitToggleCamera() {
         this.bus.$emit('toggleCamera');
       },
-      checkOptional(optionalData) {
-        console.log('checking optional in Game component');
-        return LocationData.crossCheck(optionalData);
-      }
-    },
-    created() {
-      LocationData.init();
-
-      this.bus.$on('checkedCameraResults', (noCamera) => {
+      checkedCameraResults(noCamera) {
         this.checkedCamera = true;
         this.cameraExists = !noCamera;
-      });
+      },
+      checkin(locationId) {
+        let result = LocationData.checkin(locationId);
+        
+        LocationData.update();
+        this.updateRemainingCheckins();
 
-      this.bus.$on('detectedLocationData', (markers) => {
+        if (result) {
+          if (this.remainingCheckins === LocationData.locations.length) {
+            // TODO celebrate all the checkins
+          } else {
+            // celebrate a single checkin
+            this.showCelebrateCheckin = true;
+            window.setTimeout(() => {this.showCelebrateCheckin = false}, 1000);
+          }
+        }
+      },
+      checkOptional(optionalData) {
+        return LocationData.crossCheck(optionalData);
+      },
+      detectedLocationData(markers) {
         // TODO I wonder how changing values really works here?
         // Like if I 'reassign' a value from true to true, is it really changing
         // being really senstitive to immutable forms of data storage right now
@@ -93,16 +113,20 @@
             this.currentLocation = LocationData.find(firstMarkerId);
           }
         }
-      });
+      },
+      updateRemainingCheckins() {
+        const checkedin = LocationData.locations.filter(loc => loc.checkedin);
+        this.remainingCheckins = LocationData.locations.length - checkedin.length;
+      }
+    },
+    created() {
+      LocationData.init();
 
-      this.bus.$on('checkin', (locationId) => {
-        let result = LocationData.checkin(locationId);
-        LocationData.update();
+      this.updateRemainingCheckins();
 
-        if (result) {
-          // TODO celebrate
-        }
-      });
+      this.bus.$on('checkedCameraResults', this.checkedCameraResults);
+      this.bus.$on('detectedLocationData', this.detectedLocationData);
+      this.bus.$on('checkin', this.checkin);
     }
   }
 
@@ -111,5 +135,27 @@
 <style>
   .visual-container {
     position: relative;
-  } 
+  }
+
+  .single-checkin {
+    position: absolute;
+    top: 40%;
+    background: var(--pop);
+    color: var(--dark);
+    font-size: 3em;
+    padding: 10px 30px;
+    font-weight: bold;
+    transform: rotate(20deg);
+    transition: opacity 0.15s ease-in, transform 0.15s steps(6, end);
+  }
+
+  .flyin-enter {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  .flyin-leave-active {
+    opacity: 0;
+    transform: translateX(100%) rotate(40deg);
+  }
 </style>
