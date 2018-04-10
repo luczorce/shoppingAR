@@ -1,14 +1,15 @@
 <template>
   <div class="page-game">
-    <div>
-      <p v-if="checkedCamera && !cameraExists">
+    <template v-if="checkedCamera && !cameraExists">
+      <p>
         Sorry, you'll need a camera and a <span title="Android Chrome or Apple Safari :(">specific</span> device in order to experience this.
       </p>
+    </template>
         
-      <p v-if="checkedCamera && cameraExists" class="centered">
-        <button type="button" v-on:click="emitToggleCamera">toggle camera feed</button>
-      </p>
-    </div>
+    <button v-if="checkedCamera && cameraExists" 
+            type="button" 
+            class="camera-toggle" 
+            v-on:click="emitToggleCamera">toggle camera feed</button>
 
     <div class="visual-container">
       <Camera v-bind:bus="bus" />
@@ -160,6 +161,16 @@
 </script>
 
 <style>
+  .page-game {
+    margin-top: 10px;
+  }
+
+  .camera-toggle {
+    position: absolute;
+    top: 0.5em;
+    right: 10px;
+  }
+
   .visual-container {
     position: relative;
   }

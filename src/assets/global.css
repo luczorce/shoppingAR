@@ -31,6 +31,14 @@ button {
   font-size: 1em;
   border: 1px var(--fizz) solid;
   border-radius: var(--border-radius);
+  transition: all 0.15s ease;
+}
+
+button:focus {
+  border-color: var(--opposite);
+  outline: none;
+  background: var(--text-inv);
+  color: var(--dark);
 }
 
 a {

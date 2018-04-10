@@ -17,7 +17,7 @@
 <style>
   #app {
     font-family: var(--mono-font);
-    height: calc(100vh - 20px);
+    height: 100vh;
     padding: 10px;
     display: flex;
     flex-direction: column;
