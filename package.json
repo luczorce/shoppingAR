@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --https",
-    "build": "vue-cli-service build",
+    "build": "if [ -z $NODE_ENV ]; then NODE_ENV=production; fi; vue-cli-service build --name='AR Shopping Experience' --mode=$NODE_ENV",
     "test": "vue-cli-service test",
     "lint": "vue-cli-service lint",
     "postinstall": "npm run build",
