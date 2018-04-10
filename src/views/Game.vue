@@ -19,7 +19,9 @@
     <!-- <p><button type="button" @click="testAnimation">test animation</button></p> -->
 
     <div class="messages">
-      <button v-if="showLocationButton" @click="showModal = true">Check into {{ currentLocation.name }}</button>
+      <div class="checkin-wrapper" v-if="showLocationButton">
+        <button @click="showModal = true">Check into {{ currentLocation.name }}</button>
+      </div>
       
       <modal v-if="showModal" @close="showModal = false" v-bind:bus="bus" :locationId="currentLocation.id">
         <h3 slot="header">{{ currentLocation.name }}</h3>
@@ -173,6 +175,16 @@
 
   .visual-container {
     position: relative;
+  }
+
+  .checkin-wrapper {
+    width: 100%;
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    background: var(--dark-op);
+    padding: 20px;
+    text-align: center;
   }
 
   .single-checkin {
