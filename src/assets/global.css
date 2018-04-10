@@ -30,7 +30,7 @@ button {
   font-family: inherit;
   font-size: 1em;
   border: 1px var(--fizz) solid;
-  border-radius: 3px;
+  border-radius: var(--border-radius);
 }
 
 a {
@@ -38,15 +38,25 @@ a {
 }
 
 .button-link {
+  font-size: 1em;
   line-height: 3;
   padding: 15px 25px;
   background: var(--pop);
   color: var(--dark);
   text-decoration: none;
+  border-radius: var(--border-radius);
+  border: 0;
+  text-align: center;
 }
 
 .button-link--small {
   padding: 10px 15px;
+  line-height: 1;
+}
+
+.button-link--alt {
+  background: var(--text-inv);
+  color: var(--light);
 }
 
 ::selection {

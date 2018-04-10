@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Game from './views/Game.vue'
 import About from './views/About.vue'
 import Locations from './views/Locations.vue'
+import Walkthrough from './views/Walkthrough.vue'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/locations',
       name: 'Locations',
       component: Locations
+    },
+    {
+      path: '/walkthrough',
+      name: 'Walkthrough',
+      component: Walkthrough
     }
   ]
 })
