@@ -1,6 +1,6 @@
 <template>
   <div class="page-locations">
-    <h2 class="sr-only">Locations</h2>
+    <h1>Locations</h1>
     <p>Track your progress, find all locations!</p>
     
     <h3>Locations to Discover</h3>
