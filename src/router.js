@@ -6,34 +6,39 @@ import About from './views/About.vue'
 import Locations from './views/Locations.vue'
 import Walkthrough from './views/Walkthrough.vue'
 
-Vue.use(Router)
+Vue.use(Router);
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/detecting',
-      name: 'detecting',
-      component: Game
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: About
-    },
-    {
-      path: '/locations',
-      name: 'Locations',
-      component: Locations
-    },
-    {
-      path: '/walkthrough',
-      name: 'Walkthrough',
-      component: Walkthrough
-    }
-  ]
-})
+let router;
+let routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: Home
+  },
+  {
+    path: '/detecting',
+    name: 'detecting',
+    component: Game
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About
+  },
+  {
+    path: '/locations',
+    name: 'locations',
+    component: Locations
+  },
+  {
+    path: '/walkthrough',
+    name: 'walkthrough',
+    component: Walkthrough
+  }
+];
+
+router = new Router({
+  routes: routes
+});
+
+export default router;

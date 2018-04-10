@@ -1,5 +1,6 @@
 :root {
   --dark:     #060626;
+  --dark-op:  rgba(6, 6, 38, 0.85);
   --light:    #eee;
   --pop:      #96ff96;
   --fizz:     #42b983;
