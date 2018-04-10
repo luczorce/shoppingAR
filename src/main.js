@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import './registerServiceWorker'
 import './assets/perspectivetransform.min.js';
+import './assets/variables.css';
+import './assets/global.css';
 
 Vue.config.productionTip = false
 

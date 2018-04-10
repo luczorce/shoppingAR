@@ -1,0 +1,11 @@
+:root {
+  --dark: #060626;
+  --light: #eee;
+  --pop: #96ff96;
+  --fizz: #42b983;
+  --text: #2c3e50;
+  --text-inv: #809DB9;
+
+  --os-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono-font: 'IBM Plex Mono', monospace;
+}
