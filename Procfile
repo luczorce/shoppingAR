@@ -1,1 +1,1 @@
-web: http-server dist
+web: http-server dist -c 14400
