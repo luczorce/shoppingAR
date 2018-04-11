@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --https",
+    "serve": "vue-cli-service serve",
     "build": "if [ -z $NODE_ENV ]; then NODE_ENV=production; fi; vue-cli-service build --name='AR Shopping Experience' --mode=$NODE_ENV",
     "test": "vue-cli-service test",
     "lint": "vue-cli-service lint",
@@ -15,6 +15,7 @@
     "js-aruco": "^0.1.0",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.13",
+    "vue-analytics": "^5.10.2",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
