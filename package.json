@@ -15,7 +15,6 @@
     "js-aruco": "^0.1.0",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.13",
-    "vue-analytics": "^5.10.2",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
