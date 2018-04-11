@@ -1,19 +1,19 @@
 <template>
   <div class="location-data">
-    <img src="img/gifs/bay.gif" id="bay-image" />
-    <img src="img/gifs/cancrusher.gif" id="cancrusher-image" />
-    <img src="img/gifs/coffee.gif" id="coffee-image" />
-    <img src="img/gifs/easteregg.gif" id="easteregg-image" />
-    <img src="img/gifs/fountain.gif" id="fountain-image" />
-    <img src="img/gifs/store.gif" id="store-image" />
-    <img src="img/gifs/heater.gif" id="heater-image" />
-    <img src="img/gifs/lounge.gif" id="lounge-image" />
-    <img src="img/gifs/mailbox.gif" id="mailbox-image" />
-    <img src="img/gifs/pop.gif" id="pop-image" />
-    <img src="img/gifs/recycle.gif" id="recycle-image" />
-    <img src="img/gifs/sharpie.gif" id="sharpie-image" />
-    <img src="img/gifs/toilet.gif" id="toilet-image" />
-    <img src="img/gifs/trash.gif" id="trash-image" />
+    <img src="@/assets/gifs/bay.gif" id="bay-image" />
+    <img src="@/assets/gifs/cancrusher.gif" id="cancrusher-image" />
+    <img src="@/assets/gifs/coffee.gif" id="coffee-image" />
+    <img src="@/assets/gifs/easteregg.gif" id="easteregg-image" />
+    <img src="@/assets/gifs/fountain.gif" id="fountain-image" />
+    <img src="@/assets/gifs/store.gif" id="store-image" />
+    <img src="@/assets/gifs/heater.gif" id="heater-image" />
+    <img src="@/assets/gifs/lounge.gif" id="lounge-image" />
+    <img src="@/assets/gifs/mailbox.gif" id="mailbox-image" />
+    <img src="@/assets/gifs/pop.gif" id="pop-image" />
+    <img src="@/assets/gifs/recycle.gif" id="recycle-image" />
+    <img src="@/assets/gifs/sharpie.gif" id="sharpie-image" />
+    <img src="@/assets/gifs/toilet.gif" id="toilet-image" />
+    <img src="@/assets/gifs/trash.gif" id="trash-image" />
   </div>
 </template>
 
