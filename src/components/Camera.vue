@@ -57,9 +57,11 @@
     stream = devicestream;
     video.srcObject = stream;
 
-    window.setTimeout(determineCanvasSize, 100);
+    determineCanvasSize();
+    window.setTimeout(determineCanvasSize, 750);
     // TODO create a throttle
-    // window.addEventListener('resize', determineCanvasSize, false);
+    window.addEventListener('resize', determineCanvasSize, false);
+    
     drawingInterval = requestAnimationFrame(drawVideoToCanvas);
     markerInterval = requestAnimationFrame(detectMarker);
 
