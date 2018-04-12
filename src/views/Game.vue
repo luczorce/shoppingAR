@@ -157,6 +157,9 @@
       this.bus.$on('checkedCameraResults', this.checkedCameraResults);
       this.bus.$on('detectedLocationData', this.detectedLocationData);
       this.bus.$on('checkin', this.checkin);
+    },
+    mounted() {
+      window.scrollTo(0, 0);
     }
   }
 
