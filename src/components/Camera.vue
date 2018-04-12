@@ -58,7 +58,7 @@
     video.srcObject = stream;
 
     determineCanvasSize();
-    window.setTimeout(determineCanvasSize, 100);
+    window.setTimeout(determineCanvasSize, 750);
     // TODO create a throttle
     window.addEventListener('resize', determineCanvasSize, false);
     

@@ -84,7 +84,6 @@
     left: 0;
     right: 0;
     height: 100%;
-    background: rgba(255,255,255,0.6);
   }
 
   .location-data img {
