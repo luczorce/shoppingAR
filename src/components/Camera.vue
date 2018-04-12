@@ -171,6 +171,6 @@
   }
 
   canvas {
-    /*display: none;*/
+    display: none;
   }
 </style>
