@@ -8,8 +8,8 @@
     "test": "vue-cli-service test",
     "lint": "vue-cli-service lint",
     "postinstall": "npm run build",
-    "deploy": "git push heroku master",
-    "production": "git push herokuprod master"
+    "deploy-staging": "git push heroku master",
+    "deploy-production": "git push herokuprod master"
   },
   "dependencies": {
     "http-server": "^0.11.1",
